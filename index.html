@@ -458,13 +458,16 @@ var app = new Vue({
       return this.earn_income_by_level[this.character_level][this.crafting_proficiency_level];
     },
     critical_success_earn_income_rate_cp_per_day: function () {
-      return this.earn_income_by_level[this.settlement_level + 1][this.crafting_proficiency_level];
+      let task_level = Math.min(this.settlement_level, this.character_level);
+      return this.earn_income_by_level[task_level + 1][this.crafting_proficiency_level];
     },
     success_earn_income_rate_cp_per_day: function () {
-      return this.earn_income_by_level[this.settlement_level][this.crafting_proficiency_level];
+      let task_level = Math.min(this.settlement_level, this.character_level);
+      return this.earn_income_by_level[task_level][this.crafting_proficiency_level];
     },
     failure_earn_income_rate_cp_per_day: function () {
-      return this.earn_income_by_level[this.settlement_level][0];
+      let task_level = Math.min(this.settlement_level, this.character_level);
+      return this.earn_income_by_level[task_level][0];
     },
     max_days_to_craft: function() {
       return Math.ceil((this.item_value_cp - this.overhead_cost_cp) / this.success_craft_rate_cp_per_day);
