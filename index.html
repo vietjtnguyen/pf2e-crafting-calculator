@@ -156,6 +156,7 @@ SOFTWARE.
   <h2>Crafting Check</h2>
   <ul>
     <li>Expected difficulty class: {{ difficulty_class }} = item level (DC {{ difficulty_class_item_level }}) + rarity adjustment (+{{ difficulty_class_rarity_adjustment }})</li>
+    <li>Assurance result ({{ 10 + crafting_proficiency_bonus }} = 10 + {{ crafting_proficiency_bonus }}): <span v-bind:class="{badge: true, 'badge-pill': true, 'badge-primary': assurance_result == 3, 'badge-success': assurance_result == 2, 'badge-warning': assurance_result == 1, 'badge-danger': assurance_result == 0}">{{ get_result_name(assurance_result) }}</span>
     <li>Chance of <span class="badge badge-pill badge-primary">Critical Success</span>: {{ critical_success_chance }}%</li>
     <li>Chance of <span class="badge badge-pill badge-success">Success</span>: {{ success_chance }}%</li>
     <li>Chance of <span class="badge badge-pill badge-warning">Failure</span>: {{ failure_chance }}%</li>
@@ -528,6 +529,16 @@ var app = new Vue({
     },
     sufficient_proficiency_level: function() {
       return this.crafting_proficiency_level >= this.minimum_crafting_proficiency;
+    },
+    crafting_proficiency_bonus: function() {
+      if (this.crafting_proficiency_level == 0) {
+        return 0;
+      } else {
+        return this.character_level + 2 * this.crafting_proficiency_level;
+      }
+    },
+    assurance_result: function() {
+      return this.check_result(10, this.crafting_proficiency_bonus, this.difficulty_class);
     },
     item_value_gp: function() {
       return this.item_value_cp / 100;
