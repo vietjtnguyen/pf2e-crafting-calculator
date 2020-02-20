@@ -39,7 +39,7 @@ SOFTWARE.
   <h2>Character</h2>
   <p>
     <label for="character_level">Character level: </label>
-    <input id="character_level" v-model.number="character_level">
+    <input id="character_level" type="number" min="0" max="20" v-model.number="character_level">
     <span v-for="level in 20">
       <input v-bind:id="'character_level_'+level" type="radio" v-bind:value="level" v-model.number="character_level">
       <label v-bind:for="'character_level_'+level">{{ level }}</label>
@@ -54,21 +54,21 @@ SOFTWARE.
   </p>
   <p>
     <label for="crafting_bonus">Crafting bonus: </label>
-    <input id="crafting_bonus" v-model.number="crafting_bonus">
+    <input id="crafting_bonus" type="number" v-model.number="crafting_bonus">
   </p>
 
   <h2>Item</h2>
   <p>
     <label for="item_level">Item level: </label>
-    <input id="item_level" v-model.number="item_level">
+    <input id="item_level" type="number" min="0" max="25" v-model.number="item_level">
   </p>
   <p>
     <label for="item_value_gp">Item value (gp, sp, cp): </label>
-    <input id="item_value_gp_component" v-model.lazy.number="item_value_gp_component">
-    <input id="item_value_sp_component" v-model.lazy.number="item_value_sp_component">
-    <input id="item_value_cp_component" v-model.lazy.number="item_value_cp_component">
-    <input id="item_value_gp" v-model.number="item_value_gp" disabled>
-    <input id="item_value" v-model.number="item_value" disabled>
+    <input id="item_value_gp_component" type="number" min="0" v-model.lazy.number="item_value_gp_component">
+    <input id="item_value_sp_component" type="number" min="0" v-model.lazy.number="item_value_sp_component">
+    <input id="item_value_cp_component" type="number" min="0" v-model.lazy.number="item_value_cp_component">
+    <input id="item_value_gp" type="number" v-model.number="item_value_gp" disabled>
+    <input id="item_value" type="number" v-model.number="item_value" disabled>
   </p>
   <p>
     Item is:
@@ -90,7 +90,7 @@ SOFTWARE.
   <h2>Misc</h2>
   <p>
     <label for="settlement_level">Settlement level: </label>
-    <input id="settlement_level" v-model.number="settlement_level">
+    <input id="settlement_level" type="number" min="0" max="20" v-model.number="settlement_level">
     <span v-for="level in 20">
       <input v-bind:id="'settlement_level_'+level" type="radio" v-bind:value="level" v-model.number="settlement_level">
       <label v-bind:for="'settlement_level_'+level">{{ level }}</label>
