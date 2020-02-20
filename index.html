@@ -1,0 +1,527 @@
+<!--
+Copyright (c) 2020 Viet The Nguyen
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>PF2e Crafting Calculator</title>
+  <script src="js/vue-2.6.11-dev.js"></script>
+</head>
+
+<body>
+
+<h1>Pathfinder 2e Crafting Calculator</h1>
+
+<div id="app">
+
+  <h2>Character</h2>
+  <p>
+    <label for="character_level">Character level: </label>
+    <input id="character_level" v-model.number="character_level">
+    <span v-for="level in 20">
+      <input v-bind:id="'character_level_'+level" type="radio" v-bind:value="level" v-model.number="character_level">
+      <label v-bind:for="'character_level_'+level">{{ level }}</label>
+    </span>
+  </p>
+  <p>
+    <label>Crafting proficiency level: </label>
+    <span v-for="proficiency in [0, 1, 2, 3, 4]">
+      <input v-bind:id="'proficiency_'+proficiency" type="radio" v-bind:value="proficiency" v-model.number="crafting_proficiency_level">
+      <label v-bind:for="'proficiency_'+proficiency">{{ get_proficiency_name(proficiency) }}</label>
+    </span>
+  </p>
+  <p>
+    <label for="crafting_bonus">Crafting bonus: </label>
+    <input id="crafting_bonus" v-model.number="crafting_bonus">
+  </p>
+
+  <h2>Item</h2>
+  <p>
+    <label for="item_level">Item level: </label>
+    <input id="item_level" v-model.number="item_level">
+  </p>
+  <p>
+    <label for="item_value_gp">Item value (gp, sp, cp): </label>
+    <input id="item_value_gp_component" v-model.lazy.number="item_value_gp_component">
+    <input id="item_value_sp_component" v-model.lazy.number="item_value_sp_component">
+    <input id="item_value_cp_component" v-model.lazy.number="item_value_cp_component">
+    <input id="item_value_gp" v-model.number="item_value_gp" disabled>
+    <input id="item_value" v-model.number="item_value" disabled>
+  </p>
+  <p>
+    Item is:
+    <input id="item_is_alchemical" type="checkbox" v-model="item_is_alchemical">
+    <label for="item_is_alchemical">alchemical</label>
+    <input id="item_is_snare" type="checkbox" v-model="item_is_snare">
+    <label for="item_is_snare">snare</label>
+    <input id="item_is_magical" type="checkbox" v-model="item_is_magical">
+    <label for="item_is_magical">magical</label>
+  </p>
+  <p>
+    <label>Item rarity: </label>
+    <span v-for="rarity in [0, 1, 2, 3]">
+      <input v-bind:id="'item_rarity_'+rarity" type="radio" v-bind:value="rarity" v-model.number="item_rarity">
+      <label v-bind:for="'item_rarity_'+rarity">{{ get_rarity_name(rarity) }} (DC +{{ dc_adjustment_by_rarity[rarity] }})</label>
+    </span>
+  </p>
+
+  <h2>Misc</h2>
+  <p>
+    <label for="settlement_level">Settlement level: </label>
+    <input id="settlement_level" v-model.number="settlement_level">
+    <span v-for="level in 20">
+      <input v-bind:id="'settlement_level_'+level" type="radio" v-bind:value="level" v-model.number="settlement_level">
+      <label v-bind:for="'settlement_level_'+level">{{ level }}</label>
+    </span>
+  </p>
+  <p>
+    <label for="format_values_in_gp_decimal">Format values in gp decimal: </label>
+    <input id="format_values_in_gp_decimal" type="checkbox" v-model="format_values_in_gp_decimal">
+  </p>
+
+  <h2>Requirements</h2>
+  <ul>
+    <li><input type="checkbox" v-model="sufficient_character_level" disabled> Character level ({{ character_level }}) ≥ Item level ({{ item_level }})</lI>
+    <li><input type="checkbox" v-model="sufficient_proficiency_level" disabled> Item level {{ item_level }} requires minimum {{ get_proficiency_name(minimum_crafting_proficiency) }} proficiency</lI>
+    <li v-if="item_is_alchemical"><input type="checkbox"> Character has <a href="http://2e.aonprd.com/Feats.aspx?ID=752">alchemical crafting feat</a></lI>
+    <li v-if="item_is_snare"><input type="checkbox"> Character has <a href="http://2e.aonprd.com/Feats.aspx?ID=843">snare crafting feat</a></lI>
+    <li v-if="item_is_magical"><input type="checkbox"> Character has <a href="http://2e.aonprd.com/Feats.aspx?ID=812">magical crafting feat</a></lI>
+    <li v-if="item_rarity > 0"><input type="checkbox"> Character has access to formula (item is {{ item_rarity_name }}, up to GM discretion)</lI>
+    <li><input type="checkbox"> Character has formula</lI>
+    <li><input type="checkbox"> Character has {{ format_cp_value(overhead_cost_cp) }} for starting costs</lI>
+    <li><input type="checkbox"> Character has required tools</lI>
+  </ul>
+  <h2>Crafting Check</h2>
+  <ul>
+    <li>Expected difficulty class: {{ difficulty_class }} = item level (DC {{ difficulty_class_item_level }}) + rarity adjustment (+{{ difficulty_class_rarity_adjustment }})</li>
+    <li>Chance of critical success: {{ critical_success_chance }}%</li>
+    <li>Chance of success: {{ success_chance }}%</li>
+    <li>Chance of failure: {{ failure_chance }}%</li>
+    <li>Chance of critical failure: {{ critical_failure_chance }}%</li>
+  </ul>
+  <h3>Natural Roll Results</h3>
+  <ol>
+    <li v-for="natural_roll in 20">{{ get_result_name(check_crafting_result(natural_roll)) }}</li>
+  </ol>
+  <h2>Daily Breakdown</h2>
+  <p>
+    <strong>Spent</strong>: how much has been spent to craft so far<br>
+    <strong>Value</strong>: value of the item thus far<br>
+    <strong>Balance</strong>: how much value is left until the item is complete; you can spend this amount in currency at the end of this day to immediately finish the item<br>
+    <strong>Opp. Cost</strong>: opportunity cost in the form of how much could be earned using <a href="http://2e.aonprd.com/Actions.aspx?ID=23">Earn Income</a> at this success level for a settlement level of {{ settlement_level }}<br>
+    <strong>Failure</strong>: starting overhead cost is not lost, but the four days are<br>
+    <strong>Critical Failure</strong>: 10% of starting overhead cost is lost in addition to four days<br>
+  </p>
+  <table border="1">
+    <tr>
+      <th>Rate</th>
+      <th colspan="4">Critical Success</th>
+      <th colspan="4">Success</th>
+      <th colspan="1">Failure</th>
+      <th colspan="1">Critical Failure</th>
+    </tr>
+    <tr>
+      <td>Craft</td>
+      <td colspan="4">{{ format_cp_value(critical_success_craft_rate_cp_per_day) }}</td>
+      <td colspan="4">{{ format_cp_value(success_craft_rate_cp_per_day) }}</td>
+      <td colspan="1">-</td>
+      <td colspan="1">-</td>
+    </tr>
+    <tr>
+      <td>Earn Income</td>
+      <td colspan="4">{{ format_cp_value(critical_success_earn_income_rate_cp_per_day) }}</td>
+      <td colspan="4">{{ format_cp_value(success_earn_income_rate_cp_per_day) }}</td>
+      <td colspan="1">{{ format_cp_value(failure_earn_income_rate_cp_per_day) }}</td>
+      <td colspan="1">-</td>
+    </tr>
+    <tr>
+      <th>Day</th>
+      <th>Spent</th>
+      <th>Value</th>
+      <th>Balance</th>
+      <th>Opp. Cost</th>
+      <th>Spent</th>
+      <th>Value</th>
+      <th>Balance</th>
+      <th>Opp. Cost</th>
+      <th>Opp. Cost</th>
+      <th>Spent</th>
+    </tr>
+    <tr v-for="day in overhead_days">
+      <td>{{ day }} (required)</td>
+
+      <td>{{ format_cp_value(overhead_cost_cp) }}</td>
+      <td>{{ format_cp_value(value_cp_spent_crafting_with_critical_success(day)) }}</td>
+      <td>{{ format_cp_value(item_value_cp - value_cp_spent_crafting_with_critical_success(day)) }}</td>
+      <td>{{ format_cp_value(day * critical_success_earn_income_rate_cp_per_day) }}</td>
+
+      <td>{{ format_cp_value(overhead_cost_cp) }}</td>
+      <td>{{ format_cp_value(value_cp_spent_crafting_with_success(day)) }}</td>
+      <td>{{ format_cp_value(item_value_cp - value_cp_spent_crafting_with_success(day)) }}</td>
+      <td>{{ format_cp_value(day * success_earn_income_rate_cp_per_day) }}</td>
+
+      <td>{{ format_cp_value(day * failure_earn_income_rate_cp_per_day) }}</td>
+
+      <td>{{ format_cp_value(Math.floor(overhead_cost_cp / 10)) }}</td>
+    </tr>
+    <tr v-for="post_overhead_day in max_days_to_craft">
+      <td>{{ post_overhead_day + 4 }}</td>
+
+      <td>{{ format_cp_value(overhead_cost_cp) }}</td>
+      <td>{{ format_cp_value(value_cp_spent_crafting_with_critical_success(post_overhead_day + 4)) }}</td>
+      <td>{{ format_cp_value(item_value_cp - value_cp_spent_crafting_with_critical_success(post_overhead_day + 4)) }}</td>
+      <td>{{ format_cp_value((post_overhead_day + 4) * critical_success_earn_income_rate_cp_per_day) }}</td>
+
+      <td>{{ format_cp_value(overhead_cost_cp) }}</td>
+      <td>{{ format_cp_value(value_cp_spent_crafting_with_success(post_overhead_day + 4)) }}</td>
+      <td>{{ format_cp_value(item_value_cp - value_cp_spent_crafting_with_success(post_overhead_day + 4)) }}</td>
+      <td>{{ format_cp_value((post_overhead_day + 4) * success_earn_income_rate_cp_per_day) }}</td>
+
+      <td>{{ format_cp_value((post_overhead_day + 4) * failure_earn_income_rate_cp_per_day) }}</td>
+
+      <td>{{ format_cp_value(Math.floor(overhead_cost_cp / 10)) }}</td>
+    </tr>
+  </table>
+</div>
+
+<h2>Community Use Policy</h2>
+<p>This website uses trademarks and/or copyrights owned by Paizo Inc., which are used under Paizo's Community Use Policy. We are expressly prohibited from charging you to use or access this content. This website is not published, endorsed, or specifically approved by Paizo Inc. For more information about Paizo's Community Use Policy, please visit <a href="https://paizo.com/communityuse">paizo.com/communityuse</a>. For more information about Paizo Inc. and Paizo products, please visit <a href="https://paizo.com">paizo.com</a>.</p>
+
+<h2>Open Game License</h2>
+<h3>OPEN GAME LICENSE Version 1.0a</h3>
+<p>The following text is the property of Wizards of the Coast, Inc. and is Copyright 2000 Wizards of the Coast, Inc ("Wizards"). All Rights Reserved.</p>
+<p>1. Definitions: (a) "Contributors" means the copyright and/or trademark owners who have contributed Open Game Content; (b) "Derivative Material" means copyrighted material including derivative works and translations (including into other computer languages), potation, modification, correction, addition, extension, upgrade, improvement, compilation, abridgment or other form in which an existing work may be recast, transformed or adapted; (c) "Distribute" means to reproduce, license, rent, lease, sell, broadcast, publicly display, transmit or otherwise distribute; (d) "Open Game Content" means the game mechanic and includes the methods, procedures, processes and routines to the extent such content does not embody the Product Identity and is an enhancement over the prior art and any additional content clearly identified as Open Game Content by the Contributor, and means any work covered by this License, including translations and derivative works under copyright law, but specifically excludes Product Identity. (e) "Product Identity" means product and product line names, logos and identifying marks including trade dress; artifacts; creatures characters; stories, storylines, plots, thematic elements, dialogue, incidents, language, artwork, symbols, designs, depictions, likenesses, formats, poses, concepts, themes and graphic, photographic and other visual or audio representations; names and descriptions of characters, spells, enchantments, personalities, teams, personas, likenesses and special abilities; places, locations, environments, creatures, equipment, magical or supernatural abilities or effects, logos, symbols, or graphic designs; and any other trademark or registered trademark clearly identified as Product identity by the owner of the Product Identity, and which specifically excludes the Open Game Content; (f) "Trademark" means the logos, names, mark, sign, motto, designs that are used by a Contributor to identify itself or its products or the associated products contributed to the Open Game License by the Contributor (g) "Use", "Used" or "Using" means to use, Distribute, copy, edit, format, modify, translate and otherwise create Derivative Material of Open Game Content. (h) "You" or "Your" means the licensee in terms of this agreement.</p>
+<p>2. The License: This License applies to any Open Game Content that contains a notice indicating that the Open Game Content may only be Used under and in terms of this License. You must affix such a notice to any Open Game Content that you Use. No terms may be added to or subtracted from this License except as described by the License itself. No other terms or conditions may be applied to any Open Game Content distributed using this License.</p>
+<p>3. Offer and Acceptance: By Using the Open Game Content You indicate Your acceptance of the terms of this License.</p>
+<p>4. Grant and Consideration: In consideration for agreeing to use this License, the Contributors grant You a perpetual, worldwide, royalty-free, non-exclusive license with the exact terms of this License to Use, the Open Game Content.</p>
+<p>5. Representation of Authority to Contribute: If You are contributing original material as Open Game Content, You represent that Your Contributions are Your original creation and/or You have sufficient rights to grant the rights conveyed by this License.</p>
+<p>6. Notice of License Copyright: You must update the COPYRIGHT NOTICE portion of this License to include the exact text of the COPYRIGHT NOTICE of any Open Game Content You are copying, modifying or distributing, and You must add the title, the copyright date, and the copyright holder's name to the COPYRIGHT NOTICE of any original Open Game Content you Distribute.</p>
+<p>7. Use of Product Identity: You agree not to Use any Product Identity, including as an indication as to compatibility, except as expressly licensed in another, independent Agreement with the owner of each element of that Product Identity. You agree not to indicate compatibility or co-adaptability with any Trademark or Registered Trademark in conjunction with a work containing Open Game Content except as expressly licensed in another, independent Agreement with the owner of such Trademark or Registered Trademark. The use of any Product Identity in Open Game Content does not constitute a challenge to the ownership of that Product Identity. The owner of any Product Identity used in Open Game Content shall retain all rights, title and interest in and to that Product Identity.</p>
+<p>8. Identification: If you distribute Open Game Content You must clearly indicate which portions of the work that you are distributing are Open Game Content.</p>
+<p>9. Updating the License: Wizards or its designated Agents may publish updated versions of this License. You may use any authorized version of this License to copy, modify and distribute any Open Game Content originally distributed under any version of this License.</p>
+<p>10. Copy of this License: You MUST include a copy of this License with every copy of the Open Game Content You Distribute.</p>
+<p>11. Use of Contributor Credits: You may not market or advertise the Open Game Content using the name of any Contributor unless You have written permission from the Contributor to do so.</p>
+<p>12. Inability to Comply: If it is impossible for You to comply with any of the terms of this License with respect to some or all of the Open Game Content due to statute, judicial order, or governmental regulation then You may not Use any Open Game Material so affected.</p>
+<p>13. Termination: This License will terminate automatically if You fail to comply with all terms herein and fail to cure such breach within 30 days of becoming aware of the breach. All sublicenses shall survive the termination of this License.</p>
+<p>14. Reformation: If any provision of this License is held to be unenforceable, such provision shall be reformed only to the extent necessary to make it enforceable.</p>
+<p>15. COPYRIGHT NOTICE</p>
+<p>Open Game License v 1.0 Copyright 2000, Wizards of the Coast, Inc.</p>
+<p>System Reference Document. Copyright 2000. Wizards of the Coast, Inc; Authors: Jonathan Tweet, Monte Cook, Skip Williams, based on material by E. Gary Gygax and Dave Arneson.</p>
+
+<script type="text/javascript">
+var app = new Vue({
+  el: '#app',
+  data: {
+    character_level: 1,
+    crafting_proficiency_level: 1,
+    crafting_bonus: 0,
+    item_level: 0,
+    item_value_cp: 100,
+    item_rarity: 0,
+    item_is_alchemical: false,
+    item_is_snare: false,
+    item_is_magical: false,
+    settlement_level: 1,
+    format_values_in_gp_decimal: false,
+
+    minimum_crafting_proficiency_by_level: [1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+    dc_by_level: [14, 15, 16, 18, 19, 20, 22, 23, 24, 26, 27, 28, 30, 31, 32, 34, 35, 36, 38, 39, 40, 42, 44, 46, 48, 50],
+    dc_adjustment_by_rarity: [0, 2, 5, 10],
+    earn_income_by_level: [
+      [1, 5, 5, 5, 5],
+      [2, 20, 20, 20, 20],
+      [4, 30, 30, 30, 30],
+      [8, 50, 50, 50, 50],
+      [10, 70, 80, 80, 80],
+      [20, 90, 100, 100, 100],
+      [30, 150, 200, 200, 200],
+      [40, 200, 250, 250, 250],
+      [50, 250, 300, 300, 300],
+      [60, 300, 400, 400, 400],
+      [70, 400, 500, 600, 600],
+      [80, 500, 600, 800, 800],
+      [90, 600, 800, 1000, 1000],
+      [100, 700, 1000, 1500, 1500],
+      [150, 800, 1500, 2000, 2000],
+      [200, 1000, 2000, 2800, 2800],
+      [250, 1300, 2500, 3600, 4000],
+      [300, 1500, 3000, 4500, 5500],
+      [400, 2000, 4500, 7000, 9000],
+      [600, 3000, 6000, 10000, 13000],
+      [800, 4000, 7500, 15000, 20000],
+      [null, 5000, 9000, 17500, 30000],
+    ],
+  },
+  methods: {
+    format_cp_value: function(value_cp) {
+      if (value_cp == 0) return '-';
+      if (this.format_values_in_gp_decimal) {
+        return '' + value_cp / 100 + ' gp';
+      }
+      let value_gp_component = Math.floor(value_cp / 100);
+      let value_sp_component = Math.floor((value_cp - value_gp_component * 100) / 10);
+      let value_cp_component = value_cp - value_sp_component * 10 - value_gp_component * 100;
+      let value_string = '';
+      if (value_gp_component > 0) {
+        value_string += value_gp_component + ' gp';
+      }
+      if (value_sp_component > 0) {
+        if (value_string.length > 0) {
+          value_string += ', ';
+        }
+        value_string += value_sp_component + ' sp';
+      }
+      if (value_cp_component > 0) {
+        if (value_string.length > 0) {
+          value_string += ', ';
+        }
+        value_string += value_cp_component + ' cp';
+      }
+      return value_string;
+    },
+    roll_dice: function(sides) {
+      return Math.floor(Math.random() * sides) + 1;
+    },
+    check_result: function(natural_roll, bonus, difficulty_class) {
+      let total_roll = natural_roll + bonus;
+      var result;
+      if (total_roll >= difficulty_class + 10) {
+        result = 3;
+      } else if (total_roll >= difficulty_class) {
+        result = 2;
+      } else if (total_roll >= difficulty_class - 9) {
+        result = 1;
+      } else {
+        result = 0;
+      }
+
+      if (natural_roll == 20) {
+        result = Math.min(result + 1, 3);
+      } else if (natural_roll == 1) {
+        result = Math.max(result - 1, 0);
+      }
+
+      return result;
+    },
+    calculate_result_chance: function(result, bonus, difficulty_class) {
+      let chance = 0;
+      for (let natural_roll = 1; natural_roll <= 20; natural_roll += 1) {
+        if (this.check_result(natural_roll) == result) {
+          chance += 1;
+        }
+      }
+      return chance * 5;
+    },
+    check_crafting_result: function(natural_roll) {
+      return this.check_result(natural_roll, this.crafting_bonus, this.difficulty_class);
+    },
+    calculate_crafting_result_chance: function(result) {
+      let chance = 0;
+      for (let natural_roll = 1; natural_roll <= 20; natural_roll += 1) {
+        if (this.check_crafting_result(natural_roll) == result) {
+          chance += 1;
+        }
+      }
+      return chance * 5;
+    },
+    get_result_name: function(result) {
+      if (result == 0) return "Critical Failure";
+      if (result == 1) return "Failure";
+      if (result == 2) return "Success";
+      if (result == 3) return "Critical Success";
+      return "Unknown";
+    },
+    get_proficiency_name: function(result) {
+      if (result == 0) return "Untrained";
+      if (result == 1) return "Trained";
+      if (result == 2) return "Expert";
+      if (result == 3) return "Master";
+      if (result == 4) return "Legendary";
+      return "Unknown";
+    },
+    get_rarity_name: function(rarity) {
+      if (rarity == 0) return "Common";
+      if (rarity == 1) return "Uncommon";
+      if (rarity == 2) return "Rare";
+      if (rarity == 3) return "Unique";
+      return "Unknown";
+    },
+    value_cp_spent_given_day: function(day, earn_rate) {
+      if (day <= this.overhead_days) {
+        return this.overhead_cost_cp;
+      }
+      return Math.min(this.overhead_cost_cp + (day - this.overhead_days) * earn_rate, this.item_value_cp);
+    },
+    value_cp_spent_crafting_with_critical_success: function(day) {
+      return this.value_cp_spent_given_day(day, this.critical_success_craft_rate_cp_per_day);
+    },
+    value_cp_spent_crafting_with_success: function(day) {
+      return this.value_cp_spent_given_day(day, this.success_craft_rate_cp_per_day);
+    },
+  },
+  computed: {
+    sufficient_character_level: function() {
+      return this.character_level >= this.item_level;
+    },
+    minimum_crafting_proficiency: function() {
+      return this.minimum_crafting_proficiency_by_level[this.item_level];
+    },
+    sufficient_proficiency_level: function() {
+      return this.crafting_proficiency_level >= this.minimum_crafting_proficiency;
+    },
+    item_value_gp: function() {
+      return this.item_value_cp / 100;
+    },
+    item_value_gp_component: {
+      get: function() {
+        return Math.floor(this.item_value_cp / 100);
+      },
+      set: function(value) {
+        this.item_value_cp = value * 100 + this.item_value_sp_component * 10 + this.item_value_cp_component;
+      },
+    },
+    item_value_sp_component: {
+      get: function() {
+        return Math.floor((this.item_value_cp - this.item_value_gp_component * 100) / 10);
+      },
+      set: function(value) {
+        this.item_value_cp = this.item_value_gp_component * 100 + value * 10 + this.item_value_cp_component;
+      },
+    },
+    item_value_cp_component: {
+      get: function() {
+        return this.item_value_cp - this.item_value_gp_component * 100 - this.item_value_sp_component * 10;
+      },
+      set: function(value) {
+        this.item_value_cp = this.item_value_gp_component * 100 + this.item_value_sp_component * 10 + value;
+      },
+    },
+    item_value: function() {
+      return this.format_cp_value(this.item_value_cp);
+    },
+    item_rarity_name: function() {
+      return this.get_rarity_name(this.item_rarity);
+    },
+    difficulty_class_item_level: function() {
+      return this.dc_by_level[this.item_level];
+    },
+    difficulty_class_rarity_adjustment: function() {
+      return this.dc_adjustment_by_rarity[this.item_rarity];
+    },
+    difficulty_class: function() {
+      return this.difficulty_class_item_level + this.difficulty_class_rarity_adjustment;
+    },
+    critical_success_chance: function() {
+      return this.calculate_crafting_result_chance(3);
+    },
+    success_chance: function() {
+      return this.calculate_crafting_result_chance(2);
+    },
+    failure_chance: function() {
+      return this.calculate_crafting_result_chance(1);
+    },
+    critical_failure_chance: function() {
+      return this.calculate_crafting_result_chance(0);
+    },
+    overhead_cost_cp: function() {
+      return Math.floor(this.item_value_cp / 2);
+    },
+    overhead_days: function() {
+      return 4;
+    },
+    critical_success_craft_rate_cp_per_day: function () {
+      return this.earn_income_by_level[this.character_level + 1][this.crafting_proficiency_level];
+    },
+    success_craft_rate_cp_per_day: function () {
+      return this.earn_income_by_level[this.character_level][this.crafting_proficiency_level];
+    },
+    critical_success_earn_income_rate_cp_per_day: function () {
+      return this.earn_income_by_level[this.settlement_level + 1][this.crafting_proficiency_level];
+    },
+    success_earn_income_rate_cp_per_day: function () {
+      return this.earn_income_by_level[this.settlement_level][this.crafting_proficiency_level];
+    },
+    failure_earn_income_rate_cp_per_day: function () {
+      return this.earn_income_by_level[this.settlement_level][0];
+    },
+    max_days_to_craft: function() {
+      return Math.ceil((this.item_value_cp - this.overhead_cost_cp) / this.success_craft_rate_cp_per_day);
+    },
+    state_as_base64: function() {
+      // Remember to version the URL hash object in case the format changes
+      // with future revisions
+      let state_obj_version = 1;
+      let state_json_obj = [
+        state_obj_version,
+        this.character_level,
+        this.crafting_proficiency_level,
+        this.crafting_bonus,
+        this.item_level,
+        this.item_value_cp,
+        this.item_rarity,
+        this.item_is_alchemical,
+        this.item_is_snare,
+        this.item_is_magical,
+        this.settlement_level,
+        this.format_values_in_gp_decimal,
+      ];
+      return btoa(JSON.stringify(state_json_obj));
+    },
+  },
+  watch: {
+    state_as_base64: function(new_value, old_value) {
+      // Store the application state dynamically as a base64 encoded object in
+      // the URL hash
+      window.location.hash = new_value;
+    },
+  },
+});
+
+// Load application state stored as a base64 encoded object in the URL hash
+if (window.location.hash.length > 0) {
+  let state_json_obj = JSON.parse(atob(window.location.hash.slice(1)));
+  let state_obj_version = state_json_obj[0];
+  // Interpret the URL hash object according to its version so that we might be
+  // able to maintain backwards compatability
+  switch (state_obj_version) {
+  case 1:
+    app.character_level = state_json_obj[1];
+    app.crafting_proficiency_level = state_json_obj[2];
+    app.crafting_bonus = state_json_obj[3];
+    app.item_level = state_json_obj[4];
+    app.item_value_cp = state_json_obj[5];
+    app.item_rarity = state_json_obj[6];
+    app.item_is_alchemical = state_json_obj[7];
+    app.item_is_snare = state_json_obj[8];
+    app.item_is_magical = state_json_obj[9];
+    app.settlement_level = state_json_obj[10];
+    app.format_values_in_gp_decimal = state_json_obj[11];
+  }
+}
+</script>
+
+</body>
+
+</html>
