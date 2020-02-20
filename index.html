@@ -264,7 +264,7 @@ SOFTWARE.
       <td class="table-secondary">{{ format_cp_value(item_value_cp - value_cp_spent_crafting_with_critical_success(day)) }}</td>
       <td class="table-secondary">{{ format_cp_value(day * critical_success_earn_income_rate_cp_per_day) }}</td>
       <td class="table-secondary">
-        <span v-bind:class="{'font-weight-bold': crafting_discount_with_success(day) > 0}">
+        <span v-bind:class="{'font-weight-bold': crafting_discount_with_critical_success(day) > 0}">
           {{ format_cp_value(crafting_discount_with_critical_success(day)) }}
         </span>
       </td>
@@ -291,7 +291,7 @@ SOFTWARE.
       <td class="table-primary">{{ format_cp_value(item_value_cp - value_cp_spent_crafting_with_critical_success(post_overhead_day + 4)) }}</td>
       <td class="table-primary">{{ format_cp_value((post_overhead_day + 4) * critical_success_earn_income_rate_cp_per_day) }}</td>
       <td class="table-primary">
-        <span v-bind:class="{'font-weight-bold': crafting_discount_with_success(post_overhead_day + 4) > 0}">
+        <span v-bind:class="{'font-weight-bold': crafting_discount_with_critical_success(post_overhead_day + 4) > 0}">
           {{ format_cp_value(crafting_discount_with_critical_success(post_overhead_day + 4)) }}
         </span>
       </td>
