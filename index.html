@@ -25,183 +25,290 @@ SOFTWARE.
 
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>PF2e Crafting Calculator</title>
+  <link rel="stylesheet" type="text/css" href="css/bootstrap-4.4.1.css">
   <script src="js/vue-2.6.11-dev.js"></script>
 </head>
 
 <body>
-
-<h1>Pathfinder 2e Crafting Calculator</h1>
+<div class="container">
 
 <div id="app">
+  <h1>Pathfinder 2e Crafting Calculator</h1>
 
+  <hr>
   <h2>Character</h2>
-  <p>
-    <label for="character_level">Character level: </label>
-    <input id="character_level" type="number" min="0" max="20" v-model.number="character_level">
-    <span v-for="level in 20">
-      <input v-bind:id="'character_level_'+level" type="radio" v-bind:value="level" v-model.number="character_level">
-      <label v-bind:for="'character_level_'+level">{{ level }}</label>
-    </span>
-  </p>
-  <p>
-    <label>Crafting proficiency level: </label>
-    <span v-for="proficiency in [0, 1, 2, 3, 4]">
-      <input v-bind:id="'proficiency_'+proficiency" type="radio" v-bind:value="proficiency" v-model.number="crafting_proficiency_level">
-      <label v-bind:for="'proficiency_'+proficiency">{{ get_proficiency_name(proficiency) }}</label>
-    </span>
-  </p>
-  <p>
-    <label for="crafting_bonus">Crafting bonus: </label>
-    <input id="crafting_bonus" type="number" v-model.number="crafting_bonus">
-  </p>
 
+  <div class="form-group row">
+    <label class="col-sm-4 col-form-label" for="character_level">Character level:</label>
+    <div class="col-sm-8">
+      <input class="form-control form-control-sm" id="character_level" type="number" min="1" max="20" step="1" v-model.number="character_level">
+    </div>
+    <input class="form-control-range custom-range" type="range" min="1" max="20" step="1" v-model.number="character_level">
+  </div>
+
+  <div class="form-group row">
+    <label class="col-sm-4 col-form-label">Crafting proficiency:</label>
+    <div class="col-sm-8">
+      <div v-for="proficiency in [0, 1, 2, 3, 4]" class="form-check">
+        <input class="form-check-input" v-bind:id="'proficiency_'+proficiency" type="radio" v-bind:value="proficiency" v-model.number="crafting_proficiency_level">
+        <label class="form-check-label" v-bind:for="'proficiency_'+proficiency">{{ get_proficiency_name(proficiency) }}</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label class="col-sm-4 col-form-label" for="crafting_bonus">Crafting bonus: </label>
+    <div class="col-sm-8">
+      <input class="form-control form-control-sm" id="crafting_bonus" type="number" min="0" max="70" step="1" v-model.number="crafting_bonus">
+    </div>
+    <input class="form-control-range custom-range" type="range" min="0" max="70" step="1" v-model.number="crafting_bonus">
+  </div>
+
+  <hr>
   <h2>Item</h2>
-  <p>
-    <label for="item_level">Item level: </label>
-    <input id="item_level" type="number" min="0" max="25" v-model.number="item_level">
-  </p>
-  <p>
-    <label for="item_value_gp">Item value (gp, sp, cp): </label>
-    <input id="item_value_gp_component" type="number" min="0" v-model.lazy.number="item_value_gp_component">
-    <input id="item_value_sp_component" type="number" min="0" v-model.lazy.number="item_value_sp_component">
-    <input id="item_value_cp_component" type="number" min="0" v-model.lazy.number="item_value_cp_component">
-    <input id="item_value_gp" type="number" v-model.number="item_value_gp" disabled>
-    <input id="item_value" type="number" v-model.number="item_value" disabled>
-  </p>
-  <p>
-    Item is:
-    <input id="item_is_alchemical" type="checkbox" v-model="item_is_alchemical">
-    <label for="item_is_alchemical">alchemical</label>
-    <input id="item_is_snare" type="checkbox" v-model="item_is_snare">
-    <label for="item_is_snare">snare</label>
-    <input id="item_is_magical" type="checkbox" v-model="item_is_magical">
-    <label for="item_is_magical">magical</label>
-  </p>
-  <p>
-    <label>Item rarity: </label>
-    <span v-for="rarity in [0, 1, 2, 3]">
-      <input v-bind:id="'item_rarity_'+rarity" type="radio" v-bind:value="rarity" v-model.number="item_rarity">
-      <label v-bind:for="'item_rarity_'+rarity">{{ get_rarity_name(rarity) }} (DC +{{ dc_adjustment_by_rarity[rarity] }})</label>
-    </span>
-  </p>
 
+  <div class="form-group row">
+    <label class="col-sm-4 col-form-label" for="item_level">Item level: </label>
+    <div class="col-sm-8">
+      <input class="form-control form-control-sm" id="item_level" type="number" min="0" max="25" step="1" v-model.number="item_level">
+    </div>
+    <input class="form-control-range custom-range" type="range" min="0" max="25" step="1"  v-model.number="item_level">
+  </div>
+
+  <div class="form-group row">
+    <label class="col-sm-4 col-form-label" for="item_level">Item value (gp/sp/cp): </label>
+    <div class="col-sm-2">
+      <input class="form-control form-control-sm" id="item_value_gp_component" type="number" min="0" step="1" v-model.number="item_value_gp_component">
+    </div>
+    <div class="col-sm-2">
+      <input class="form-control form-control-sm" id="item_value_sp_component" type="number" min="0" step="1" v-model.number="item_value_sp_component">
+    </div>
+    <div class="col-sm-2">
+      <input class="form-control form-control-sm" id="item_value_cp_component" type="number" min="0" step="1" v-model.number="item_value_cp_component">
+    </div>
+    <div class="col-sm-2">
+      <input class="form-control form-control-sm" id="item_value_gp" type="number" min="0" step="0.01" v-model.number="item_value_gp" disabled>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label class="col-sm-4 col-form-label">Item is:</label>
+    <div class="col-sm-8">
+      <div class="form-check">
+        <input class="form-check-input" id="item_is_alchemical" type="checkbox" v-model="item_is_alchemical">
+        <label class="form-check-label" for="item_is_alchemical">Alchemical</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" id="item_is_snare" type="checkbox" v-model="item_is_snare">
+        <label class="form-check-label" for="item_is_snare">Snare</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" id="item_is_magical" type="checkbox" v-model="item_is_magical">
+        <label class="form-check-label" for="item_is_magical">Magical</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label class="col-sm-4 col-form-label">Item rarity:</label>
+    <div class="col-sm-8">
+      <div v-for="rarity in [0, 1, 2, 3]" class="form-check">
+        <input class="form-check-input" v-bind:id="'item_rarity_'+rarity" type="radio" v-bind:value="rarity" v-model.number="item_rarity">
+        <label class="form-check-label" v-bind:for="'item_rarity_'+rarity">{{ get_rarity_name(rarity) }} (DC +{{ dc_adjustment_by_rarity[rarity] }})</label>
+      </div>
+    </div>
+  </div>
+
+  <hr>
   <h2>Misc</h2>
-  <p>
-    <label for="settlement_level">Settlement level: </label>
-    <input id="settlement_level" type="number" min="0" max="20" v-model.number="settlement_level">
-    <span v-for="level in 20">
-      <input v-bind:id="'settlement_level_'+level" type="radio" v-bind:value="level" v-model.number="settlement_level">
-      <label v-bind:for="'settlement_level_'+level">{{ level }}</label>
-    </span>
-  </p>
-  <p>
-    <label for="format_values_in_gp_decimal">Format values in gp decimal: </label>
-    <input id="format_values_in_gp_decimal" type="checkbox" v-model="format_values_in_gp_decimal">
-  </p>
 
+  <div class="form-group row">
+    <label class="col-sm-4 col-form-label" for="settlement_level">Settlement level:</label>
+    <div class="col-sm-8">
+      <input class="form-control form-control-sm" id="settlement_level" type="number" min="1" max="20" step="1" v-model.number="settlement_level">
+    </div>
+    <input class="form-control-range custom-range" type="range" min="1" max="20" step="1" v-model.number="settlement_level">
+  </div>
+
+  <div class="form-group">
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" id="format_values_in_gp_decimal" type="checkbox" v-model="format_values_in_gp_decimal">
+      <label class="form-check-label">format values in gp decimal</label>
+    </div>
+  </div>
+
+  <hr>
   <h2>Requirements</h2>
-  <ul>
-    <li><input type="checkbox" v-model="sufficient_character_level" disabled> Character level ({{ character_level }}) ≥ Item level ({{ item_level }})</lI>
-    <li><input type="checkbox" v-model="sufficient_proficiency_level" disabled> Item level {{ item_level }} requires minimum {{ get_proficiency_name(minimum_crafting_proficiency) }} proficiency</lI>
-    <li v-if="item_is_alchemical"><input type="checkbox"> Character has <a href="http://2e.aonprd.com/Feats.aspx?ID=752">alchemical crafting feat</a></lI>
-    <li v-if="item_is_snare"><input type="checkbox"> Character has <a href="http://2e.aonprd.com/Feats.aspx?ID=843">snare crafting feat</a></lI>
-    <li v-if="item_is_magical"><input type="checkbox"> Character has <a href="http://2e.aonprd.com/Feats.aspx?ID=812">magical crafting feat</a></lI>
-    <li v-if="item_rarity > 0"><input type="checkbox"> Character has access to formula (item is {{ item_rarity_name }}, up to GM discretion)</lI>
-    <li><input type="checkbox"> Character has formula</lI>
-    <li><input type="checkbox"> Character has {{ format_cp_value(overhead_cost_cp) }} for starting costs</lI>
-    <li><input type="checkbox"> Character has required tools</lI>
-  </ul>
+
+  <div v-bind:class="{alert: true, 'alert-success': sufficient_character_level, 'alert-danger': !sufficient_character_level}" role="alert">
+    Character level ({{ character_level }}) ≥ Item level ({{ item_level }})
+  </div>
+  <div v-bind:class="{alert: true, 'alert-success': sufficient_proficiency_level, 'alert-danger': !sufficient_proficiency_level}">
+    Item level {{ item_level }} requires minimum {{ get_proficiency_name(minimum_crafting_proficiency) }} proficiency
+  </div>
+  <div class="alert alert-warning" v-if="item_is_alchemical">
+    Character has <a href="http://2e.aonprd.com/Feats.aspx?ID=752">alchemical crafting feat</a>
+  </div>
+  <div class="alert alert-warning" v-if="item_is_snare">
+    Character has <a href="http://2e.aonprd.com/Feats.aspx?ID=843">snare crafting feat</a>
+  </div>
+  <div class="alert alert-warning" v-if="item_is_magical">
+    Character has <a href="http://2e.aonprd.com/Feats.aspx?ID=812">magical crafting feat</a>
+  </div>
+  <div class="alert alert-warning" v-if="item_rarity > 0">
+    Character has access to formula (item is {{ item_rarity_name }}, up to GM discretion)
+  </div>
+  <div class="alert alert-warning">
+    Character has formula
+  </div>
+  <div class="alert alert-warning">
+    Character has {{ format_cp_value(overhead_cost_cp) }} for starting costs
+  </div>
+  <div class="alert alert-warning">
+    Character has required tools
+  </div>
+
+  <hr>
   <h2>Crafting Check</h2>
   <ul>
     <li>Expected difficulty class: {{ difficulty_class }} = item level (DC {{ difficulty_class_item_level }}) + rarity adjustment (+{{ difficulty_class_rarity_adjustment }})</li>
-    <li>Chance of critical success: {{ critical_success_chance }}%</li>
-    <li>Chance of success: {{ success_chance }}%</li>
-    <li>Chance of failure: {{ failure_chance }}%</li>
-    <li>Chance of critical failure: {{ critical_failure_chance }}%</li>
+    <li>Chance of <span class="badge badge-pill badge-primary">Critical Success</span>: {{ critical_success_chance }}%</li>
+    <li>Chance of <span class="badge badge-pill badge-success">Success</span>: {{ success_chance }}%</li>
+    <li>Chance of <span class="badge badge-pill badge-warning">Failure</span>: {{ failure_chance }}%</li>
+    <li>Chance of <span class="badge badge-pill badge-danger">Critical Failure</span>: {{ critical_failure_chance }}%</li>
   </ul>
+
   <h3>Natural Roll Results</h3>
-  <ol>
-    <li v-for="natural_roll in 20">{{ get_result_name(check_crafting_result(natural_roll)) }}</li>
-  </ol>
+  <p>
+    <span v-for="natural_roll in 20" v-bind:class="{badge: true, 'badge-pill': true, 'badge-primary': check_crafting_result(natural_roll) == 3, 'badge-success': check_crafting_result(natural_roll) == 2, 'badge-warning': check_crafting_result(natural_roll) == 1, 'badge-danger': check_crafting_result(natural_roll) == 0}">{{ natural_roll }}</span>
+  </p>
+
+  <h3>Quick Adjustment</h3>
+
+  <div class="form-group row">
+    <label class="col-sm-6 col-form-label" for="crafting_bonus2">Crafting bonus: </label>
+    <label class="col-sm-6 col-form-label" for="item_level2">Item level: </label>
+  </div>
+  <div class="form-group row">
+    <div class="col-sm-3">
+      <input class="form-control form-control-sm" id="crafting_bonus2" type="number" min="0" max="70" step="1" v-model.number="crafting_bonus">
+    </div>
+    <div class="col-sm-3">
+      <input class="form-control-range custom-range" type="range" min="0" max="70" step="1" v-model.number="crafting_bonus">
+    </div>
+    <div class="col-sm-3">
+      <input class="form-control form-control-sm" id="item_level2" type="number" min="0" max="25" step="1" v-model.number="item_level">
+    </div>
+    <div class="col-sm-3">
+      <input class="form-control-range custom-range" type="range" min="0" max="25" step="1"  v-model.number="item_level">
+    </div>
+  </div>
+
+  <hr>
   <h2>Daily Breakdown</h2>
   <p>
     <strong>Spent</strong>: how much has been spent to craft so far<br>
     <strong>Value</strong>: value of the item thus far<br>
     <strong>Balance</strong>: how much value is left until the item is complete; you can spend this amount in currency at the end of this day to immediately finish the item<br>
     <strong>Opp. Cost</strong>: opportunity cost in the form of how much could be earned using <a href="http://2e.aonprd.com/Actions.aspx?ID=23">Earn Income</a> at this success level for a settlement level of {{ settlement_level }}<br>
+    <strong>Discount</strong>: how much money you save by finishing the crafted item on this day; this is the difference between money spent on crafting (start up cost of half item value plus any expedite cost) and the item value minus how much money you could have earned using Earn Income; a negative value means it's cheaper to Earn Income and buy the item; a positive value means it's cheaper to craft the item<br>
     <strong>Failure</strong>: starting overhead cost is not lost, but the four days are<br>
     <strong>Critical Failure</strong>: 10% of starting overhead cost is lost in addition to four days<br>
   </p>
-  <table border="1">
-    <tr>
-      <th>Rate</th>
-      <th colspan="4">Critical Success</th>
-      <th colspan="4">Success</th>
-      <th colspan="1">Failure</th>
-      <th colspan="1">Critical Failure</th>
-    </tr>
+  <table class="table table-striped table-bordered table-sm table-responsive">
+    <thead class="thead-dark">
+      <tr>
+        <th>Rate</th>
+        <th colspan="5">Critical Success</th>
+        <th colspan="5">Success</th>
+        <th colspan="1">Failure</th>
+        <th colspan="1">Critical Failure</th>
+      </tr>
+    </thead>
     <tr>
       <td>Craft</td>
-      <td colspan="4">{{ format_cp_value(critical_success_craft_rate_cp_per_day) }}</td>
-      <td colspan="4">{{ format_cp_value(success_craft_rate_cp_per_day) }}</td>
-      <td colspan="1">-</td>
-      <td colspan="1">-</td>
+      <td class="table-primary" colspan="5">{{ format_cp_value(critical_success_craft_rate_cp_per_day) }}</td>
+      <td class="table-success" colspan="5">{{ format_cp_value(success_craft_rate_cp_per_day) }}</td>
+      <td class="table-warning" colspan="1">-</td>
+      <td class="table-danger" colspan="1">-</td>
     </tr>
     <tr>
       <td>Earn Income</td>
-      <td colspan="4">{{ format_cp_value(critical_success_earn_income_rate_cp_per_day) }}</td>
-      <td colspan="4">{{ format_cp_value(success_earn_income_rate_cp_per_day) }}</td>
-      <td colspan="1">{{ format_cp_value(failure_earn_income_rate_cp_per_day) }}</td>
-      <td colspan="1">-</td>
+      <td class="table-primary" colspan="5">{{ format_cp_value(critical_success_earn_income_rate_cp_per_day) }}</td>
+      <td class="table-success" colspan="5">{{ format_cp_value(success_earn_income_rate_cp_per_day) }}</td>
+      <td class="table-warning" colspan="1">{{ format_cp_value(failure_earn_income_rate_cp_per_day) }}</td>
+      <td class="table-danger" colspan="1">-</td>
     </tr>
-    <tr>
-      <th>Day</th>
-      <th>Spent</th>
-      <th>Value</th>
-      <th>Balance</th>
-      <th>Opp. Cost</th>
-      <th>Spent</th>
-      <th>Value</th>
-      <th>Balance</th>
-      <th>Opp. Cost</th>
-      <th>Opp. Cost</th>
-      <th>Spent</th>
-    </tr>
+      <tr>
+        <th>Day</th>
+        <th>Spent</th>
+        <th>Value</th>
+        <th>Balance</th>
+        <th>Opp. Cost</th>
+        <th>Discount</th>
+        <th>Spent</th>
+        <th>Value</th>
+        <th>Balance</th>
+        <th>Opp. Cost</th>
+        <th>Discount</th>
+        <th>Opp. Cost</th>
+        <th>Spent</th>
+      </tr>
     <tr v-for="day in overhead_days">
-      <td>{{ day }} (required)</td>
+      <th scope="row">{{ day }} (req.)</th>
 
-      <td>{{ format_cp_value(overhead_cost_cp) }}</td>
-      <td>{{ format_cp_value(value_cp_spent_crafting_with_critical_success(day)) }}</td>
-      <td>{{ format_cp_value(item_value_cp - value_cp_spent_crafting_with_critical_success(day)) }}</td>
-      <td>{{ format_cp_value(day * critical_success_earn_income_rate_cp_per_day) }}</td>
+      <td class="table-secondary">{{ format_cp_value(overhead_cost_cp) }}</td>
+      <td class="table-secondary">{{ format_cp_value(value_cp_spent_crafting_with_critical_success(day)) }}</td>
+      <td class="table-secondary">{{ format_cp_value(item_value_cp - value_cp_spent_crafting_with_critical_success(day)) }}</td>
+      <td class="table-secondary">{{ format_cp_value(day * critical_success_earn_income_rate_cp_per_day) }}</td>
+      <td class="table-secondary">
+        <span v-bind:class="{'font-weight-bold': crafting_discount_with_success(day) > 0}">
+          {{ format_cp_value(crafting_discount_with_critical_success(day)) }}
+        </span>
+      </td>
 
-      <td>{{ format_cp_value(overhead_cost_cp) }}</td>
-      <td>{{ format_cp_value(value_cp_spent_crafting_with_success(day)) }}</td>
-      <td>{{ format_cp_value(item_value_cp - value_cp_spent_crafting_with_success(day)) }}</td>
-      <td>{{ format_cp_value(day * success_earn_income_rate_cp_per_day) }}</td>
+      <td class="table-secondary">{{ format_cp_value(overhead_cost_cp) }}</td>
+      <td class="table-secondary">{{ format_cp_value(value_cp_spent_crafting_with_success(day)) }}</td>
+      <td class="table-secondary">{{ format_cp_value(item_value_cp - value_cp_spent_crafting_with_success(day)) }}</td>
+      <td class="table-secondary">{{ format_cp_value(day * success_earn_income_rate_cp_per_day) }}</td>
+      <td class="table-secondary">
+        <span v-bind:class="{'font-weight-bold': crafting_discount_with_success(day) > 0}">
+          {{ format_cp_value(crafting_discount_with_critical_success(day)) }}
+        </span>
+      </td>
 
-      <td>{{ format_cp_value(day * failure_earn_income_rate_cp_per_day) }}</td>
+      <td class="table-secondary">{{ format_cp_value(day * failure_earn_income_rate_cp_per_day) }}</td>
 
-      <td>{{ format_cp_value(Math.floor(overhead_cost_cp / 10)) }}</td>
+      <td class="table-secondary">{{ format_cp_value(Math.floor(overhead_cost_cp / 10)) }}</td>
     </tr>
     <tr v-for="post_overhead_day in max_days_to_craft">
-      <td>{{ post_overhead_day + 4 }}</td>
+      <th scope="row">{{ post_overhead_day + 4 }}</th>
 
-      <td>{{ format_cp_value(overhead_cost_cp) }}</td>
-      <td>{{ format_cp_value(value_cp_spent_crafting_with_critical_success(post_overhead_day + 4)) }}</td>
-      <td>{{ format_cp_value(item_value_cp - value_cp_spent_crafting_with_critical_success(post_overhead_day + 4)) }}</td>
-      <td>{{ format_cp_value((post_overhead_day + 4) * critical_success_earn_income_rate_cp_per_day) }}</td>
+      <td class="table-primary">{{ format_cp_value(overhead_cost_cp) }}</td>
+      <td class="table-primary">{{ format_cp_value(value_cp_spent_crafting_with_critical_success(post_overhead_day + 4)) }}</td>
+      <td class="table-primary">{{ format_cp_value(item_value_cp - value_cp_spent_crafting_with_critical_success(post_overhead_day + 4)) }}</td>
+      <td class="table-primary">{{ format_cp_value((post_overhead_day + 4) * critical_success_earn_income_rate_cp_per_day) }}</td>
+      <td class="table-primary">
+        <span v-bind:class="{'font-weight-bold': crafting_discount_with_success(post_overhead_day + 4) > 0}">
+          {{ format_cp_value(crafting_discount_with_critical_success(post_overhead_day + 4)) }}
+        </span>
+      </td>
 
-      <td>{{ format_cp_value(overhead_cost_cp) }}</td>
-      <td>{{ format_cp_value(value_cp_spent_crafting_with_success(post_overhead_day + 4)) }}</td>
-      <td>{{ format_cp_value(item_value_cp - value_cp_spent_crafting_with_success(post_overhead_day + 4)) }}</td>
-      <td>{{ format_cp_value((post_overhead_day + 4) * success_earn_income_rate_cp_per_day) }}</td>
+      <td class="table-success">{{ format_cp_value(overhead_cost_cp) }}</td>
+      <td class="table-success">{{ format_cp_value(value_cp_spent_crafting_with_success(post_overhead_day + 4)) }}</td>
+      <td class="table-success">{{ format_cp_value(item_value_cp - value_cp_spent_crafting_with_success(post_overhead_day + 4)) }}</td>
+      <td class="table-success">{{ format_cp_value((post_overhead_day + 4) * success_earn_income_rate_cp_per_day) }}</td>
+      <td class="table-success">
+        <span v-bind:class="{'font-weight-bold': crafting_discount_with_success(post_overhead_day + 4) > 0}">
+          {{ format_cp_value(crafting_discount_with_success(post_overhead_day + 4)) }}
+        </span>
+      </td>
 
-      <td>{{ format_cp_value((post_overhead_day + 4) * failure_earn_income_rate_cp_per_day) }}</td>
+      <td class="table-warning">{{ format_cp_value((post_overhead_day + 4) * failure_earn_income_rate_cp_per_day) }}</td>
 
-      <td>{{ format_cp_value(Math.floor(overhead_cost_cp / 10)) }}</td>
+      <td class="table-danger">{{ format_cp_value(Math.floor(overhead_cost_cp / 10)) }}</td>
     </tr>
   </table>
 </div>
@@ -229,6 +336,8 @@ SOFTWARE.
 <p>15. COPYRIGHT NOTICE</p>
 <p>Open Game License v 1.0 Copyright 2000, Wizards of the Coast, Inc.</p>
 <p>System Reference Document. Copyright 2000. Wizards of the Coast, Inc; Authors: Jonathan Tweet, Monte Cook, Skip Williams, based on material by E. Gary Gygax and Dave Arneson.</p>
+
+</div>
 
 <script type="text/javascript">
 var app = new Vue({
@@ -377,8 +486,26 @@ var app = new Vue({
     value_cp_spent_crafting_with_critical_success: function(day) {
       return this.value_cp_spent_given_day(day, this.critical_success_craft_rate_cp_per_day);
     },
+    total_crafting_cost_with_critical_success: function(day) {
+      return this.overhead_cost_cp + (this.item_value_cp - this.value_cp_spent_given_day(day, this.critical_success_craft_rate_cp_per_day));
+    },
+    total_earn_income_cost_with_critical_success: function(day) {
+      return this.item_value_cp - day * this.critical_success_earn_income_rate_cp_per_day;
+    },
+    crafting_discount_with_critical_success: function(day) {
+      return this.total_earn_income_cost_with_critical_success(day) - this.total_crafting_cost_with_critical_success(day);
+    },
     value_cp_spent_crafting_with_success: function(day) {
       return this.value_cp_spent_given_day(day, this.success_craft_rate_cp_per_day);
+    },
+    total_crafting_cost_with_success: function(day) {
+      return this.overhead_cost_cp + (this.item_value_cp - this.value_cp_spent_given_day(day, this.success_craft_rate_cp_per_day));
+    },
+    total_earn_income_cost_with_success: function(day) {
+      return this.item_value_cp - day * this.success_earn_income_rate_cp_per_day;
+    },
+    crafting_discount_with_success: function(day) {
+      return this.total_earn_income_cost_with_success(day) - this.total_crafting_cost_with_success(day);
     },
   },
   computed: {
