@@ -698,21 +698,42 @@ var app = new Vue({
     state_as_base64: function() {
       // Remember to version the URL hash object in case the format changes
       // with future revisions
-      let state_obj_version = 1;
-      let state_json_obj = [
-        state_obj_version,
-        this.character_level,
-        this.crafting_proficiency_level,
-        this.crafting_bonus,
-        this.item_level,
-        this.item_value_cp,
-        this.item_rarity,
-        this.item_is_alchemical,
-        this.item_is_snare,
-        this.item_is_magical,
-        this.settlement_level,
-        this.format_values_in_gp_decimal,
-      ];
+      let state_obj_version = 2;
+      var state_json_obj;
+      switch (state_obj_version) {
+        case 1:
+          state_json_obj = [
+            state_obj_version,
+            this.character_level,
+            this.crafting_proficiency_level,
+            this.crafting_bonus,
+            this.item_level,
+            this.item_value_cp,
+            this.item_rarity,
+            this.item_is_alchemical,
+            this.item_is_snare,
+            this.item_is_magical,
+            this.settlement_level,
+            this.format_values_in_gp_decimal,
+          ];
+        case 2:
+          state_json_obj = [
+            state_obj_version,
+            this.character_level,
+            this.crafting_proficiency_level,
+            this.crafting_bonus,
+            this.item_level,
+            this.item_value_cp,
+            this.item_rarity,
+            this.item_is_alchemical,
+            this.item_is_snare,
+            this.item_is_magical,
+            this.item_batch_size,
+            this.settlement_level,
+            this.format_values_in_gp_decimal,
+            this.item_search_text,
+          ];
+      }
       return btoa(JSON.stringify(state_json_obj));
     },
     item_search_results: function() {
@@ -738,18 +759,36 @@ if (window.location.hash.length > 0) {
   // Interpret the URL hash object according to its version so that we might be
   // able to maintain backwards compatability
   switch (state_obj_version) {
-  case 1:
-    app.character_level = state_json_obj[1];
-    app.crafting_proficiency_level = state_json_obj[2];
-    app.crafting_bonus = state_json_obj[3];
-    app.item_level = state_json_obj[4];
-    app.item_value_cp = state_json_obj[5];
-    app.item_rarity = state_json_obj[6];
-    app.item_is_alchemical = state_json_obj[7];
-    app.item_is_snare = state_json_obj[8];
-    app.item_is_magical = state_json_obj[9];
-    app.settlement_level = state_json_obj[10];
-    app.format_values_in_gp_decimal = state_json_obj[11];
+    case 1:
+      app.character_level = state_json_obj[1];
+      app.crafting_proficiency_level = state_json_obj[2];
+      app.crafting_bonus = state_json_obj[3];
+      app.item_level = state_json_obj[4];
+      app.item_value_cp = state_json_obj[5];
+      app.item_rarity = state_json_obj[6];
+      app.item_is_alchemical = state_json_obj[7];
+      app.item_is_snare = state_json_obj[8];
+      app.item_is_magical = state_json_obj[9];
+      app.item_batch_size = 1;
+      app.settlement_level = state_json_obj[10];
+      app.format_values_in_gp_decimal = state_json_obj[11];
+      app.item_search_text = "";
+      break;
+    case 2:
+      app.character_level = state_json_obj[1];
+      app.crafting_proficiency_level = state_json_obj[2];
+      app.crafting_bonus = state_json_obj[3];
+      app.item_level = state_json_obj[4];
+      app.item_value_cp = state_json_obj[5];
+      app.item_rarity = state_json_obj[6];
+      app.item_is_alchemical = state_json_obj[7];
+      app.item_is_snare = state_json_obj[8];
+      app.item_is_magical = state_json_obj[9];
+      app.item_batch_size = state_json_obj[10];
+      app.settlement_level = state_json_obj[11];
+      app.format_values_in_gp_decimal = state_json_obj[12];
+      app.item_search_text = state_json_obj[13]
+      break;
   }
 }
 </script>
