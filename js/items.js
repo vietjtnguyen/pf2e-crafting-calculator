@@ -212,11 +212,35 @@ items_by_categories = {
     {name: "Shortbow", level: 0, value: "3 gp"},
     {name: "Shuriken", level: 0, value: "1 cp", rarity: 1},
   ],
-  "Ammunition": [
-    {name: "10x Arrows", level: 0, value: "1 sp"},
-    {name: "10x Blowgun Darts", level: 0, value: "5 cp"},
-    {name: "10x Bolts", level: 0, value: "1 sp"},
-    {name: "10x Sling Bullets", level: 0, value: "1 cp"},
+  "Ammunition (non-magical)": [
+    {name: "Arrow", level: 0, value: "1 sp"},
+    {name: "Blowgun Dart", level: 0, value: "5 cp"},
+    {name: "Bolt", level: 0, value: "1 sp"},
+    {name: "Sling Bullet", level: 0, value: "1 cp"},
+  ],
+  "Ammunition (magical)": [
+    {name: "Shining Ammunition", level: 1, value: "3 gp"},
+    {name: "Beacon Shot", level: 3, value: "10 gp"},
+    {name: "Vine Arrow", level: 3, value: "10 gp"},
+    {name: "Sleep Arrow", level: 3, value: "11 gp"},
+    {name: "Spellstrike Ammunition (Type I)", level: 3, value: "12 gp"},
+    {name: "Climbing Bolt", level: 4, value: "15 gp"},
+    {name: "Viper Arrow", level: 4, value: "17 gp"},
+    {name: "Spellstrike Ammunition (Type II)", level: 5, value: "30 gp"},
+    {name: "Spellstrike Ammunition (Type III)", level: 7, value: "70 gp"},
+    {name: "Explosive Ammunition", level: 9, value: "130 gp"},
+    {name: "Storm Arrow", level: 9, value: "130 gp"},
+    {name: "Spellstrike Ammunition (Type IV)", level: 9, value: "150 gp"},
+    {name: "Spellstrike Ammunition (Type V)", level: 11, value: "300 gp"},
+    {name: "Penetrating Ammunition", level: 12, value: "400 gp"},
+    {name: "Explosive Ammunition (Greater)", level: 13, value: "520 gp"},
+    {name: "Spellstrike Ammunition (Type VI)", level: 13, value: "600 gp"},
+    {name: "Ghost Ammunition", level: 14, value: "900 gp"},
+    {name: "Disintegration Bolt", level: 15, value: "1,300 gp", rarity: 1},
+    {name: "Spellstrike Ammunition (Type VII)", level: 15, value: "1,300 gp"},
+    {name: "Stone Bullet", level: 15, value: "1,300 gp"},
+    {name: "Spellstrike Ammunition (Type VIII)", level: 17, value: "3,000 gp"},
+    {name: "Spellstrike Ammunition (Type IX)", level: 19, value: "8,000 gp"},
   ],
   "Armor": [
     {name: "Explorer's Clothing", level: 0, value: "1 sp"},
@@ -1135,8 +1159,12 @@ for (category in items_by_categories) {
       break;
     case "Ranged Weapon":
       break;
-    case "Ammunition":
+    case "Ammunition (non-magical)":
       batch_size = 10;
+      break;
+    case "Ammunition (magical)":
+      is_magical = true;
+      batch_size = 4;
       break;
     case "Armor":
       break;
