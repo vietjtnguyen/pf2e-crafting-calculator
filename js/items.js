@@ -701,7 +701,6 @@ items_by_categories = {
     {name: "Heavy Crossbow", level: 0, value: "4 gp"},
     {name: "Javelin", level: 0, value: "1 sp"},
     {name: "Sling", level: 0, value: "0"},
-    {name: "Alchemical Bomb", level: 0, value: "0"},
     {name: "Composite Longbow", level: 0, value: "20 gp"},
     {name: "Composite Shortbow", level: 0, value: "14 gp"},
     {name: "Halfling Sling Staff", level: 0, value: "5 gp", rarity: 1},
