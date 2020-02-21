@@ -626,9 +626,6 @@ var app = new Vue({
         this.item_value_cp = this.item_value_gp_component * 100 + this.item_value_sp_component * 10 + value;
       },
     },
-    item_value: function() {
-      return this.format_cp_value(this.item_value_cp);
-    },
     item_rarity_name: function() {
       return this.get_rarity_name(this.item_rarity);
     },
