@@ -442,40 +442,6 @@ items_by_categories = {
     {name: "Steel Shield", level: 0, value: "2 gp"},
     {name: "Tower Shield", level: 0, value: "10 gp"},
   ],
-  "Shield (precious material)": [
-    {name: "Cold Iron Buckler (Low-Grade)", level: 2, value: "30 gp"},
-    {name: "Silver Buckler (Low-Grade)", level: 2, value: "30 gp"},
-    {name: "Cold Iron Shield (Low-Grade)", level: 2, value: "34 gp"},
-    {name: "Silver Shield (Low-Grade)", level: 2, value: "34 gp"},
-    {name: "Cold Iron Buckler (Standard-Grade)", level: 7, value: "300 gp"},
-    {name: "Silver Buckler (Standard-Grade)", level: 7, value: "300 gp"},
-    {name: "Cold Iron Shield (Standard-Grade)", level: 7, value: "340 gp"},
-    {name: "Silver Shield (Standard-Grade)", level: 7, value: "340 gp"},
-    {name: "Adamantine Buckler (Standard-Grade)", level: 8, value: "400 gp", rarity: 1},
-    {name: "Darkwood Buckler (Standard-Grade)", level: 8, value: "400 gp", rarity: 1},
-    {name: "Dragonhide Buckler (Standard-Grade)", level: 8, value: "400 gp", rarity: 1},
-    {name: "Mithral Buckler (Standard-Grade)", level: 8, value: "400 gp", rarity: 1},
-    {name: "Adamantine Shield (Standard-Grade)", level: 8, value: "440 gp", rarity: 1},
-    {name: "Darkwood Shield (Standard-Grade)", level: 8, value: "440 gp", rarity: 1},
-    {name: "Dragonhide Shield (Standard-Grade)", level: 8, value: "440 gp", rarity: 1},
-    {name: "Mithral Shield (Standard-Grade)", level: 8, value: "440 gp", rarity: 1},
-    {name: "Darkwood Tower Shield (Standard-Grade)", level: 8, value: "560 gp", rarity: 1},
-    {name: "Cold Iron Buckler (High-Grade)", level: 15, value: "5,000 gp"},
-    {name: "Silver Buckler (High-Grade)", level: 15, value: "5,000 gp"},
-    {name: "Cold Iron Shield (High-Grade)", level: 15, value: "5,500 gp"},
-    {name: "Silver Shield (High-Grade)", level: 15, value: "5,500 gp"},
-    {name: "Adamantine Buckler (High-Grade)", level: 16, value: "8,000 gp", rarity: 1},
-    {name: "Darkwood Buckler (High-Grade)", level: 16, value: "8,000 gp", rarity: 1},
-    {name: "Dragonhide Buckler (High-Grade)", level: 16, value: "8,000 gp", rarity: 1},
-    {name: "Mithral Buckler (High-Grade)", level: 16, value: "8,000 gp", rarity: 1},
-    {name: "Adamantine Shield (High-Grade)", level: 16, value: "8,800 gp", rarity: 1},
-    {name: "Darkwood Shield (High-Grade)", level: 16, value: "8,800 gp", rarity: 1},
-    {name: "Dragonhide Shield (High-Grade)", level: 16, value: "8,800 gp", rarity: 1},
-    {name: "Mithral Shield (High-Grade)", level: 16, value: "8,800 gp", rarity: 1},
-    {name: "Darkwood Tower Shield (High-Grade)", level: 16, value: "11,200 gp", rarity: 1},
-    {name: "Orichalcum Buckler (High-Grade)", level: 17, value: "12,000 gp", rarity: 2},
-    {name: "Orichalcum Shield (High-Grade)", level: 17, value: "13,200 gp", rarity: 2},
-  ],
   "Shield (specific)": [
     {name: "Sturdy Shield (Minor)", level: 4, value: "100 gp"},
     {name: "Lion's Shield", level: 6, value: "245 gp"},
@@ -1170,8 +1136,6 @@ for (category in items_by_categories) {
     case "Adventuring Gear":
       break;
     case "Shield (base)":
-      break;
-    case "Shield (precious material)":
       break;
     case "Snare":
       is_snare = true;
