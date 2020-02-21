@@ -655,7 +655,7 @@ items_by_categories = {
     {name: "Wand of Smoldering Fireballs (9th-Level Spell)", level: 20, value: "70,000 gp"},
     {name: "Wand of Widening (9th-Level Spell)", level: 20, value: "70,000 gp"},
   ],
-  "Alchemical Bombs": [
+  "Alchemical Bomb": [
     {name: "Acid Flask (Lesser)", level: 1, value: "3 gp"},
     {name: "Alchemist's Fire (Lesser)", level: 1, value: "3 gp"},
     {name: "Bottled Lightning (Lesser)", level: 1, value: "3 gp"},
@@ -685,7 +685,7 @@ items_by_categories = {
     {name: "Tanglefoot Bag (Major)", level: 17, value: "2,500 gp"},
     {name: "Thunderstone (Major)", level: 17, value: "2,500 gp"},
   ],
-  "Alchemical Elixirs": [
+  "Alchemical Elixir": [
     {name: "Antidote (Lesser)", level: 1, value: "3 gp"},
     {name: "Antiplague (Lesser)", level: 1, value: "3 gp"},
     {name: "Cheetah's Elixir (Lesser)", level: 1, value: "3 gp"},
@@ -767,7 +767,7 @@ items_by_categories = {
     {name: "Silvertongue Mutagen (Major)", level: 17, value: "3,000 gp"},
     {name: "Elixir of Life (True)", level: 19, value: "3,000 gp"},
   ],
-  "Alchemical Poisons": [
+  "Alchemical Poison": [
     {name: "Arsenic", level: 1, value: "3 gp"},
     {name: "Giant Centipede Venom", level: 1, value: "4 gp"},
     {name: "Belladonna", level: 2, value: "5 gp"},
@@ -809,7 +809,7 @@ items_by_categories = {
     {name: "Tears of Death", level: 20, value: "12,000 gp"},
     {name: "Nightmare Salt", level: 20, value: "14,000 gp", rarity: 2},
   ],
-  "Alchemical Tools": [
+  "Alchemical Tool": [
     {name: "Alchemical Crossbow", level: 0, value: "25 gp"},
     {name: "Tindertwig", level: 1, value: "2 sp"},
     {name: "Snake Oil", level: 1, value: "2 gp"},
@@ -818,15 +818,303 @@ items_by_categories = {
     {name: "Silversheen", level: 2, value: "6 gp"},
     {name: "Smokestick (Greater)", level: 7, value: "53 gp"},
   ],
+  "Apex Item": [
+    {name: "Anklets of Alacrity", level: 17, value: "15,000 gp"},
+    {name: "Belt of Giant Strength", level: 17, value: "15,000 gp"},
+    {name: "Belt of Regeneration", level: 17, value: "15,000 gp"},
+    {name: "Circlet of Persuasion", level: 17, value: "15,000 gp"},
+    {name: "Diadem of Intellect", level: 17, value: "15,000 gp"},
+    {name: "Headband of Inspired Wisdom", level: 17, value: "15,000 gp"},
+  ],
+  "Worn Item (other)": [
+    // WARNING: RARITIES HAVE NOT BEEN SPECIFIED YET
+    {name: "Aeon Stone (Dull Gray)", level: 1, value: "9 gp"},
+    {name: "Wayfinder", level: 2, value: "28 gp"},
+    {name: "Archaic Wayfinder", level: 2, value: "30 gp"},
+    {name: "Brooch of Shielding", level: 2, value: "30 gp"},
+    {name: "Hand of the Mage", level: 2, value: "30 gp"},
+    {name: "Hat of Disguise", level: 2, value: "30 gp"},
+    {name: "Handwraps of Mighty Blows (+1)", level: 2, value: "35 gp"},
+    {name: "Doubling Rings", level: 3, value: "50 gp"},
+    {name: "Hat of the Magi", level: 3, value: "50 gp"},
+    {name: "Persona Mask", level: 3, value: "50 gp"},
+    {name: "Bracers of Missile Deflection", level: 3, value: "52 gp"},
+    {name: "Golden Legion Epaulet", level: 3, value: "55 gp"},
+    {name: "Channel Protection Amulet", level: 3, value: "56 gp"},
+    {name: "Bracelets of Dashing", level: 3, value: "58 gp"},
+    {name: "Coyote Cloak", level: 3, value: "60 gp"},
+    {name: "Crafter's Eyepiece", level: 3, value: "60 gp"},
+    {name: "Dancing Scarf", level: 3, value: "60 gp"},
+    {name: "Pendant of the Occult", level: 3, value: "60 gp"},
+    {name: "Tracker's Goggles", level: 3, value: "60 gp"},
+    {name: "Ventriloquist's Ring", level: 3, value: "60 gp"},
+    {name: "Healer's Gloves", level: 4, value: "80 gp"},
+    {name: "Hunter's Arrowhead", level: 4, value: "80 gp"},
+    {name: "Lifting Belt", level: 4, value: "80 gp"},
+    {name: "Wayfinder of Rescue", level: 4, value: "80 gp"},
+    {name: "Demon Mask", level: 4, value: "85 gp"},
+    {name: "Cloak of Repute", level: 4, value: "90 gp"},
+    {name: "Alchemist Goggles", level: 4, value: "100 gp"},
+    {name: "Arcane Scroll Case of Simplicity", level: 4, value: "100 gp"},
+    {name: "Divine Scroll Case of Simplicity", level: 4, value: "100 gp"},
+    {name: "Handwraps of Mighty Blows (+1 Striking)", level: 4, value: "100 gp"},
+    {name: "Occult Scroll Case of Simplicity", level: 4, value: "100 gp"},
+    {name: "Primal Scroll Case of Simplicity", level: 4, value: "100 gp"},
+    {name: "Shining Wayfinder", level: 4, value: "100 gp"},
+    {name: "Necklace of Fireballs I", level: 5, value: "44 gp"},
+    {name: "Diplomat's Badge", level: 5, value: "125 gp"},
+    {name: "Boots of Elvenkind", level: 5, value: "145 gp"},
+    {name: "Cinderclaw Gauntlet", level: 5, value: "150 gp"},
+    {name: "Goggles of Night", level: 5, value: "150 gp"},
+    {name: "Vanishing Wayfinder", level: 5, value: "150 gp"},
+    {name: "Bort's Blessing", level: 5, value: "160 gp"},
+    {name: "Merchant's Guile", level: 5, value: "160 gp"},
+    {name: "Ring of Minor Arcana", level: 5, value: "160 gp"},
+    {name: "Ring of the Weary Traveler", level: 5, value: "160 gp"},
+    {name: "Stalwart's Ring", level: 5, value: "160 gp"},
+    {name: "Warrior's Training Ring", level: 5, value: "160 gp"},
+    {name: "Bi-Resonant Wayfinder", level: 6, value: "200 gp"},
+    {name: "Choker of Elocution", level: 6, value: "200 gp"},
+    {name: "Pathfinder's Pouch", level: 6, value: "200 gp"},
+    {name: "Bellflower Toolbelt", level: 6, value: "220 gp"},
+    {name: "Ring of the Ram", level: 6, value: "220 gp"},
+    {name: "Aeon Stone (Gold Nodule)", level: 6, value: "230 gp"},
+    {name: "Clandestine Cloak", level: 6, value: "230 gp"},
+    {name: "Ring of Energy Resistance", level: 6, value: "245 gp"},
+    {name: "Necklace of Fireballs II", level: 7, value: "115 gp"},
+    {name: "Unmemorable Mantle", level: 7, value: "300 gp"},
+    {name: "Aeon Stone (Clear Spindle)", level: 7, value: "325 gp"},
+    {name: "Ring of Sustenance", level: 7, value: "325 gp"},
+    {name: "Slippers of Spider Climbing", level: 7, value: "325 gp"},
+    {name: "Boots of Bounding", level: 7, value: "340 gp"},
+    {name: "Gloves of Storing", level: 7, value: "340 gp"},
+    {name: "Hat of Disguise (Greater)", level: 7, value: "340 gp"},
+    {name: "Aeon Stone (Tourmaline Sphere)", level: 7, value: "350 gp"},
+    {name: "Cloak of Elvenkind", level: 7, value: "360 gp"},
+    {name: "Ring of Wizardry (Type I)", level: 7, value: "360 gp"},
+    {name: "Bracers of Armor I", level: 8, value: "450 gp"},
+    {name: "Necklace of Fireballs III", level: 9, value: "300 gp"},
+    {name: "Heartstone", level: 9, value: "600 gp"},
+    {name: "Armbands of Athleticism", level: 9, value: "645 gp"},
+    {name: "Belt of the Five Kings", level: 9, value: "650 gp"},
+    {name: "Bracers of Missile Deflection (Greater)", level: 9, value: "650 gp"},
+    {name: "Coyote Cloak (Greater)", level: 9, value: "650 gp"},
+    {name: "Dancing Scarf (Greater)", level: 9, value: "650 gp"},
+    {name: "Hat of the Magi (Greater)", level: 9, value: "650 gp"},
+    {name: "Pendant of the Occult (Greater)", level: 9, value: "650 gp"},
+    {name: "Persona Mask (Greater)", level: 9, value: "650 gp"},
+    {name: "Tracker's Goggles (Greater)", level: 9, value: "660 gp"},
+    {name: "Ventriloquist's Ring (Greater)", level: 9, value: "670 gp"},
+    {name: "Knapsack of Halflingkind", level: 9, value: "675 gp"},
+    {name: "Phylactery of Faithfulness", level: 9, value: "680 gp"},
+    {name: "Eyes of the Eagle", level: 9, value: "700 gp"},
+    {name: "Healer's Gloves (Greater)", level: 9, value: "700 gp"},
+    {name: "Messenger's Ring", level: 9, value: "700 gp"},
+    {name: "Greater Cloak of Repute", level: 9, value: "1,300 gp"},
+    {name: "Greater Unmemorable Mantle", level: 9, value: "1,300 gp"},
+    {name: "Aluum Charm", level: 10, value: "0"},
+    {name: "Choker of Elocution (Greater)", level: 10, value: "850 gp"},
+    {name: "Ring of Lies", level: 10, value: "850 gp"},
+    {name: "Winged Boots", level: 10, value: "850 gp"},
+    {name: "Clandestine Cloak (Greater)", level: 10, value: "900 gp"},
+    {name: "Daredevil Boots", level: 10, value: "900 gp"},
+    {name: "Demon Mask (Greater)", level: 10, value: "900 gp"},
+    {name: "Ring of Counterspells", level: 10, value: "925 gp"},
+    {name: "Cloak of the Bat", level: 10, value: "950 gp"},
+    {name: "Ring of Energy Resistance (Greater)", level: 10, value: "975 gp"},
+    {name: "Cape of the Mountebank", level: 10, value: "980 gp"},
+    {name: "Druid's Vestments", level: 10, value: "1,000 gp"},
+    {name: "Handwraps of Mighty Blows (+2 Striking)", level: 10, value: "1,000 gp"},
+    {name: "Ring of Wizardry (Type II)", level: 10, value: "1,000 gp"},
+    {name: "Necklace of Fireballs IV", level: 11, value: "700 gp"},
+    {name: "Cassock of Devotion", level: 11, value: "1,150 gp"},
+    {name: "Ring of Manical Devices", level: 11, value: "1,175 gp"},
+    {name: "Crafter's Eyepiece (Greater)", level: 11, value: "1,200 gp"},
+    {name: "Boots of Elvenkind (Greater)", level: 11, value: "1,250 gp"},
+    {name: "Goggles of Night (Greater)", level: 11, value: "1,250 gp"},
+    {name: "Gorget of the Primal Roar", level: 11, value: "1,250 gp"},
+    {name: "Doubling Rings (Greater)", level: 11, value: "1,300 gp"},
+    {name: "Alchemist Goggles (Greater)", level: 11, value: "1,400 gp"},
+    {name: "Cloak of Elvenkind (Greater)", level: 12, value: "1,750 gp"},
+    {name: "Ring of Climbing", level: 12, value: "1,750 gp"},
+    {name: "Ring of Swimming", level: 12, value: "1,750 gp"},
+    {name: "Aeon Stone (Pink Rhomboid)", level: 12, value: "1,900 gp"},
+    {name: "Berserker's Cloak", level: 12, value: "2,000 gp"},
+    {name: "Black Pearl Aeon Stone", level: 12, value: "2,000 gp"},
+    {name: "Handwraps of Mighty Blows (+2 Greater Striking)", level: 12, value: "2,000 gp"},
+    {name: "Ring of Wizardry (Type III)", level: 12, value: "2,000 gp"},
+    {name: "Necklace of Fireballs V", level: 13, value: "1,600 gp"},
+    {name: "Aeon Stone (Pale Lavender Ellipsoid)", level: 13, value: "2,200 gp"},
+    {name: "Eye of Fortune", level: 13, value: "2,700 gp"},
+    {name: "Ring of the Ram (Greater)", level: 13, value: "2,700 gp"},
+    {name: "Knapsack of Halflingkind (Greater)", level: 13, value: "2,850 gp"},
+    {name: "Boots of Speed", level: 13, value: "3,000 gp"},
+    {name: "Bracers of Armor II", level: 14, value: "4,000 gp"},
+    {name: "Pactmaster's Grace", level: 14, value: "4,000 gp"},
+    {name: "Boots of Bounding (Greater)", level: 14, value: "4,250 gp"},
+    {name: "Ring of Energy Resistance (Major)", level: 14, value: "4,400 gp"},
+    {name: "Ring of Wizardry (Type IV)", level: 14, value: "4,500 gp"},
+    {name: "Necklace of Fireballs VI", level: 15, value: "4,200 gp"},
+    {name: "Dragonscale Amulet", level: 15, value: "5,800 gp"},
+    {name: "Robe of the Archmagi", level: 15, value: "6,500 gp"},
+    {name: "Aeon Stone (Orange Prism)", level: 16, value: "9,750 gp"},
+    {name: "Handwraps of Mighty Blows (+3 Greater Striking)", level: 16, value: "10,000 gp"},
+    {name: "Necklace of Fireballs VII", level: 17, value: "9,600 gp"},
+    {name: "Armbands of Athleticism (Greater)", level: 17, value: "13,000 gp"},
+    {name: "Cloak of the Bat (Greater)", level: 17, value: "13,000 gp"},
+    {name: "Phylactery of Faithfulness (Greater)", level: 17, value: "13,000 gp"},
+    {name: "Robe of Eyes", level: 17, value: "13,000 gp"},
+    {name: "Messenger's Ring (Greater)", level: 17, value: "13,500 gp"},
+    {name: "Daredevil Boots (Greater)", level: 17, value: "14,000 gp"},
+    {name: "Voyager's Pack", level: 17, value: "14,800 gp"},
+    {name: "Alchemist Goggles (Major)", level: 17, value: "15,000 gp"},
+    {name: "Dread Blindfold", level: 17, value: "15,000 gp"},
+    {name: "Major Cloak of Repute", level: 17, value: "21,750 gp"},
+    {name: "Major Unmemorable Mantle", level: 17, value: "21,750 gp"},
+    {name: "Ring of Manical Devices (Greater)", level: 18, value: "4,250 gp"},
+    {name: "Inexplicable Apparatus", level: 18, value: "19,000 gp"},
+    {name: "Goggles of Night (Major)", level: 18, value: "20,000 gp"},
+    {name: "Aeon Stone (Lavender and Green Ellipsoid)", level: 19, value: "30,000 gp"},
+    {name: "Robe of the Archmagi (Greater)", level: 19, value: "32,000 gp"},
+    {name: "Berserker's Cloak (Greater)", level: 19, value: "40,000 gp"},
+    {name: "Handwraps of Mighty Blows (+3 Major Striking)", level: 19, value: "40,000 gp"},
+    {name: "Third Eye", level: 19, value: "40,000 gp"},
+    {name: "Bracers of Armor III", level: 20, value: "60,000 gp"},
+    {name: "Whisper of the First Lie", level: 20, value: "60,000 gp"},
+    {name: "Ring of Spell Turning", level: 20, value: "67,000 gp"},
+  ],
+  "Held Item": [
+    {name: "Everburning Torch", level: 1, value: "15 gp"},
+    {name: "Pathfinder's Coin", level: 2, value: "30 gp"},
+    {name: "Wondrous Figurine (Onyx Dog)", level: 2, value: "34 gp"},
+    {name: "Thurible of Revelation (Lesser)", level: 3, value: "55 gp"},
+    {name: "Maestro's Instrument (Lesser)", level: 3, value: "60 gp"},
+    {name: "Bag of Holding (Type I)", level: 4, value: "75 gp"},
+    {name: "Skeleton Key", level: 5, value: "125 gp"},
+    {name: "Holy Prayer Beads", level: 5, value: "160 gp", rarity: 1},
+    {name: "Traveler's Any-Tool", level: 6, value: "200 gp"},
+    {name: "Insistent Door Knocker", level: 6, value: "225 gp"},
+    {name: "Horn of Fog", level: 6, value: "230 gp"},
+    {name: "Primeval Mistletoe", level: 6, value: "230 gp"},
+    {name: "Chime of Opening", level: 6, value: "235 gp", rarity: 1},
+    {name: "Bag of Holding (Type II)", level: 7, value: "300 gp"},
+    {name: "Bottled Air", level: 7, value: "320 gp"},
+    {name: "Decanter of Endless Water", level: 7, value: "320 gp"},
+    {name: "Wondrous Figurine (Jade Serpent)", level: 7, value: "340 gp"},
+    {name: "Dragon's Eye Charm", level: 7, value: "360 gp"},
+    {name: "Rod of Wonder", level: 8, value: "465 gp", rarity: 2},
+    {name: "Cursed Dreamstone", level: 9, value: "0"},
+    {name: "Immovable Rod", level: 9, value: "600 gp"},
+    {name: "Triton's Conch", level: 9, value: "640 gp"},
+    {name: "Dreamstone", level: 9, value: "700 gp"},
+    {name: "Horn of Blasting", level: 9, value: "700 gp"},
+    {name: "Maestro's Instrument (Moderate)", level: 10, value: "900 gp"},
+    {name: "Thurible of Revelation (Moderate)", level: 10, value: "900 gp"},
+    {name: "Wondrous Figurine (Golden Lions)", level: 10, value: "900 gp"},
+    {name: "Bag of Holding (Type III)", level: 11, value: "1,200 gp"},
+    {name: "Greater Insistent Door Knocker", level: 11, value: "1,250 gp"},
+    {name: "Skeleton Key (Greater)", level: 11, value: "1,250 gp"},
+    {name: "Holy Prayer Beads (Greater)", level: 11, value: "1,400 gp", rarity: 1},
+    {name: "Lich Phylactery", level: 12, value: "1,600 gp"},
+    {name: "Marvelous Medicines", level: 12, value: "1,800 gp"},
+    {name: "Broom of Flying", level: 12, value: "1,900 gp"},
+    {name: "Bag of Holding (Type IV)", level: 13, value: "2,400 gp"},
+    {name: "Wondrous Figurine (Marble Elephant)", level: 13, value: "2,700 gp"},
+    {name: "Crystal Ball (Clear Quartz)", level: 14, value: "3,800 gp", rarity: 1},
+    {name: "Primeval Mistletoe (Greater)", level: 14, value: "3,900 gp"},
+    {name: "Rod of Negation", level: 14, value: "4,300 gp"},
+    {name: "Wondrous Figurine (Obsidian Steed)", level: 15, value: "6,000 gp"},
+    {name: "Crystal Ball (Selenite)", level: 15, value: "7,000 gp", rarity: 1},
+    {name: "Crystal Ball (Moonstone)", level: 16, value: "7,500 gp", rarity: 1},
+    {name: "Guiding Chisel", level: 16, value: "10,000 gp", rarity: 4},
+    {name: "Crystal Ball (Peridot)", level: 17, value: "12,500 gp", rarity: 1},
+    {name: "Major Insistent Door Knocker", level: 17, value: "13,500 gp"},
+    {name: "Maestro's Instrument (Greater", level: 18, value: "19,000 gp"},
+    {name: "Marvelous Medicines (Greater)", level: 18, value: "19,000 gp"},
+    {name: "Thurible of Revelation (Greater)", level: 18, value: "19,000 gp"},
+    {name: "Possibility Tome", level: 18, value: "22,000 gp"},
+    {name: "Crystal Ball (Obsidian)", level: 19, value: "32,000 gp", rarity: 1},
+  ],
+  "Oil": [
+    {name: "Nectar of Purification", level: 1, value: "3 gp"},
+    {name: "Oil of Weightlessness", level: 2, value: "6 gp"},
+    {name: "Oil of Potency", level: 2, value: "7 gp"},
+    {name: "Oil of Mending", level: 3, value: "9 gp"},
+    {name: "Salve of Slipperiness", level: 5, value: "25 gp"},
+    {name: "Oil of Weightlessness (Greater)", level: 6, value: "36 gp"},
+    {name: "Salve of Antiparalysis", level: 6, value: "40 gp"},
+    {name: "Aligned Oil", level: 9, value: "140 gp"},
+    {name: "Oil of Repulsion", level: 11, value: "175 gp"},
+    {name: "Oil of Keen Edges", level: 11, value: "250 gp", rarity: 1},
+    {name: "Salve of Antiparalysis (Greater)", level: 12, value: "325 gp"},
+    {name: "Oil of Animation", level: 12, value: "330 gp", rarity: 1},
+    {name: "Obfuscation Oil", level: 15, value: "1,200 gp"},
+    {name: "Antimagic Oil", level: 20, value: "13,000 gp", rarity: 2},
+  ],
+  "Other Consumable": [
+    {name: "Feather Token (Ladder)", level: 1, value: "3 gp"},
+    {name: "Holy Water", level: 1, value: "3 gp"},
+    {name: "Runestone", level: 1, value: "3 gp"},
+    {name: "Unholy Water", level: 1, value: "3 gp"},
+    {name: "Feather Token (Holly Bush)", level: 2, value: "6 gp"},
+    {name: "Feather Token (Bird)", level: 3, value: "8 gp"},
+    {name: "Feather Token (Chest)", level: 3, value: "10 gp"},
+    {name: "Feather Token (Fan)", level: 4, value: "15 gp"},
+    {name: "Feather Token (Tree)", level: 6, value: "38 gp"},
+    {name: "Dust of Appearance", level: 6, value: "50 gp"},
+    {name: "Feather Token (Anchor)", level: 7, value: "55 gp"},
+    {name: "Candle of Truth", level: 8, value: "75 gp"},
+    {name: "Feather Token (Swan Boat)", level: 8, value: "76 gp"},
+    {name: "Javelin of Lightning", level: 9, value: "110 gp"},
+    {name: "Feather Token (Whip)", level: 9, value: "130 gp"},
+    {name: "Dust of Disappearance", level: 9, value: "135 gp"},
+    {name: "Elemental Gem", level: 10, value: "200 gp"},
+  ],
+  "Weapon (specific)": [
+    {name: "Scrollstaff", level: 1, value: "12 gp"},
+    {name: "Fighter's Fork", level: 3, value: "50 gp"},
+    {name: "Retribution Axe", level: 3, value: "60 gp"},
+    {name: "Dagger of Venom", level: 5, value: "150 gp"},
+    {name: "Caterwaul Sling", level: 5, value: "155 gp"},
+    {name: "Bloodletting Kukri", level: 6, value: "240 gp"},
+    {name: "Twining Staff", level: 6, value: "250 gp"},
+    {name: "Eclipse", level: 8, value: "450 gp"},
+    {name: "Crimson Brand", level: 9, value: "700 gp"},
+    {name: "Gloom Blade", level: 9, value: "700 gp"},
+    {name: "Oathbow", level: 11, value: "1,300 gp"},
+    {name: "Dwarven Thrower", level: 13, value: "2,750 gp"},
+    {name: "Flame Tongue", level: 13, value: "2,800 gp"},
+    {name: "Storm Flash", level: 14, value: "4,000 gp"},
+    {name: "Holy Avenger", level: 14, value: "4,500 gp"},
+    {name: "Frost Brand", level: 16, value: "10,000 gp"},
+    {name: "Radiant Lance", level: 17, value: "5,750 gp"},
+    {name: "Flame Tongue (Greater)", level: 17, value: "13,800 gp"},
+    {name: "Luck Blade", level: 17, value: "15,000 gp"},
+    {name: "Storm Flash (Greater)", level: 18, value: "21,000 gp"},
+    {name: "Luck Blade (Wishing)", level: 19, value: "30,000 gp"},
+    {name: "Mattock of the Titans", level: 19, value: "36,000 gp"},
+    {name: "Sky Hammer", level: 20, value: "70,000 gp"},
+  ],
+  "Armor (specific)": [
+    {name: "Ghoul Hide", level: 6, value: "220 gp"},
+    {name: "Moonlit Chain", level: 7, value: "360 gp"},
+    {name: "Rhino Hide", level: 9, value: "700 gp"},
+    {name: "Electric Eelskin", level: 10, value: "950 gp"},
+    {name: "Breastplate of Command", level: 10, value: "1,000 gp"},
+    {name: "Celestial Armor", level: 13, value: "2,500 gp"},
+    {name: "Demon Armor", level: 13, value: "2,500 gp"},
+    {name: "Mail of Luck", level: 13, value: "2,600 gp"},
+    {name: "Glorious Plate", level: 14, value: "4,500 gp"},
+    {name: "Plate Armor of the Deep", level: 15, value: "6,500 gp"},
+    {name: "Dragonplate", level: 16, value: "1,000 gp"},
+    {name: "Impenetrable Scale", level: 17, value: "12,800 gp"},
+    {name: "Breastplate of Command (Greater)", level: 18, value: "22,000 gp"},
+  ],
 };
-//oils = [],
 //scrolls = [],
-//worn_items = [],
 //weapons_precious = [],
 //armor_precious = [],
-//apex_items = [],
 //ammunition = [],
-//other_consumables = [],
 
 function parse_value(value_string) {
   if (value_string == '0') {
@@ -860,6 +1148,7 @@ for (category in items_by_categories) {
       break;
     case "Snare":
       is_snare = true;
+      batch_size = 4;
       break;
     case "Shield (specific)":
       is_magical = true;
@@ -878,6 +1167,7 @@ for (category in items_by_categories) {
       break;
     case "Talisman":
       is_magical = true;
+      batch_size = 4;
       break;
     case "Potion":
       is_magical = true;
@@ -892,21 +1182,43 @@ for (category in items_by_categories) {
     case "Specialty Wand":
       is_magical = true;
       break;
-    case "Alchemical Bombs":
+    case "Alchemical Bomb":
       is_alchemical = true;
       batch_size = 4;
       break;
-    case "Alchemical Elixirs":
+    case "Alchemical Elixir":
       is_alchemical = true;
       batch_size = 4;
       break;
-    case "Alchemical Poisons":
+    case "Alchemical Poison":
       is_alchemical = true;
       batch_size = 4;
       break;
-    case "Alchemical Tools":
-      break;
+    case "Alchemical Tool":
       is_alchemical = true;
+      break;
+    case "Apex Item":
+      is_magical = true;
+      break;
+    case "Worn Item (other)":
+      is_magical = true;
+      break;
+    case "Held Item":
+      is_magical = true;
+      break;
+    case "Oil":
+      is_magical = true;
+      batch_size = 4;
+      break;
+    case "Other Consumable":
+      is_magical = true;
+      batch_size = 4;
+      break;
+    case "Weapon (specific)":
+      is_magical = true;
+      break;
+    case "Armor (specific)":
+      is_magical = true;
       break;
   }
   for (i in items_by_categories[category]) {
