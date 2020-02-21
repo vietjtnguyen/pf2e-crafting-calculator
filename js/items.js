@@ -1099,6 +1099,9 @@ items_by_categories = {
     {name: "Impenetrable Scale", level: 17, value: "12,800 gp"},
     {name: "Breastplate of Command (Greater)", level: 18, value: "22,000 gp"},
   ],
+  "Tattoo": [
+    {name: "Blessed Tattoo", level: 4, value: "90 gp", rarity: 1},
+  ]
 };
 //scrolls = [],
 //weapons_precious = [],
@@ -1209,6 +1212,9 @@ for (category in items_by_categories) {
       is_magical = true;
       break;
     case "Armor (specific)":
+      is_magical = true;
+      break;
+    case "Tattoo":
       is_magical = true;
       break;
   }
