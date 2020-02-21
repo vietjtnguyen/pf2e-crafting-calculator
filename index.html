@@ -88,7 +88,7 @@ SOFTWARE.
       <th scope="col">Level</th>
       <th scope="col">Value</th>
       <th scope="col">Rarity</th>
-      <!--th scope="col">Batch</th-->
+      <th scope="col">Max Batch</th>
     </thead>
     <tr v-for="result in item_search_results">
       <td><button type="button" class="btn btn-sm btn-primary" v-on:click="apply_item(result.item)">{{ result.item.name }}</button></td>
@@ -96,7 +96,7 @@ SOFTWARE.
       <td>{{ result.item.level }}</td>
       <td>{{ format_cp_value(result.item.value_cp) }}</td>
       <td>{{ get_rarity_name(result.item.rarity) }}</td>
-      <!--td>{{ result.item.batch_size }}</td-->
+      <td>{{ result.item.batch_size }}</td>
     </tr>
   </table>
 
@@ -139,6 +139,13 @@ SOFTWARE.
         <input class="form-check-input" id="item_is_magical" type="checkbox" v-model="item_is_magical">
         <label class="form-check-label" for="item_is_magical">Magical</label>
       </div>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label class="col-sm-4 col-form-label" for="item_batch_size">Item batch size: </label>
+    <div class="col-sm-8">
+      <input class="form-control form-control-sm" id="item_batch_size" type="number" min="0" max="25" step="1" v-model.number="item_batch_size">
     </div>
   </div>
 
@@ -240,10 +247,10 @@ SOFTWARE.
 
   <p>
     <strong>Spent</strong>: how much has been spent to craft so far<br>
-    <strong>Value</strong>: value of the item thus far<br>
-    <strong>Balance</strong>: how much value is left until the item is complete; you can spend this amount in currency at the end of this day to immediately finish the item<br>
+    <strong>Value</strong>: value of the item batch thus far<br>
+    <strong>Balance</strong>: how much value is left until the item batch is complete; you can spend this amount in currency at the end of this day to immediately finish the item<br>
     <strong>Opp. Cost</strong>: opportunity cost in the form of how much could be earned using <a href="http://2e.aonprd.com/Actions.aspx?ID=23">Earn Income</a> at this success level for a settlement level of {{ settlement_level }}<br>
-    <strong>Discount</strong>: how much money you save by finishing the crafted item on this day; this is the difference between money spent on crafting (start up cost of half item value plus any expedite cost) and the item value minus how much money you could have earned using Earn Income; a negative value means it's cheaper to Earn Income and buy the item; a positive value means it's cheaper to craft the item<br>
+    <strong>Discount</strong>: how much money you save by finishing the crafted item batch on this day; this is the difference between money spent on crafting (start up cost of half item batch value plus any expedite cost) and the item batch value minus how much money you could have earned using Earn Income; a negative value means it's cheaper to Earn Income and buy the item; a positive value means it's cheaper to craft the item<br>
     <strong>Failure</strong>: starting overhead cost is not lost, but the four days are<br>
     <strong>Critical Failure</strong>: 10% of starting overhead cost is lost in addition to four days<br>
   </p>
@@ -292,7 +299,7 @@ SOFTWARE.
 
       <td class="table-secondary">{{ format_cp_value(overhead_cost_cp) }}</td>
       <td class="table-secondary">{{ format_cp_value(value_cp_spent_crafting_with_critical_success(day)) }}</td>
-      <td class="table-secondary">{{ format_cp_value(item_value_cp - value_cp_spent_crafting_with_critical_success(day)) }}</td>
+      <td class="table-secondary">{{ format_cp_value(item_batch_value_cp - value_cp_spent_crafting_with_critical_success(day)) }}</td>
       <td class="table-secondary">{{ format_cp_value(day * critical_success_earn_income_rate_cp_per_day) }}</td>
       <td class="table-secondary">
         <span v-bind:class="{'font-weight-bold': crafting_discount_with_critical_success(day) > 0}">
@@ -302,7 +309,7 @@ SOFTWARE.
 
       <td class="table-secondary">{{ format_cp_value(overhead_cost_cp) }}</td>
       <td class="table-secondary">{{ format_cp_value(value_cp_spent_crafting_with_success(day)) }}</td>
-      <td class="table-secondary">{{ format_cp_value(item_value_cp - value_cp_spent_crafting_with_success(day)) }}</td>
+      <td class="table-secondary">{{ format_cp_value(item_batch_value_cp - value_cp_spent_crafting_with_success(day)) }}</td>
       <td class="table-secondary">{{ format_cp_value(day * success_earn_income_rate_cp_per_day) }}</td>
       <td class="table-secondary">
         <span v-bind:class="{'font-weight-bold': crafting_discount_with_success(day) > 0}">
@@ -319,7 +326,7 @@ SOFTWARE.
 
       <td class="table-primary">{{ format_cp_value(overhead_cost_cp) }}</td>
       <td class="table-primary">{{ format_cp_value(value_cp_spent_crafting_with_critical_success(post_overhead_day + 4)) }}</td>
-      <td class="table-primary">{{ format_cp_value(item_value_cp - value_cp_spent_crafting_with_critical_success(post_overhead_day + 4)) }}</td>
+      <td class="table-primary">{{ format_cp_value(item_batch_value_cp - value_cp_spent_crafting_with_critical_success(post_overhead_day + 4)) }}</td>
       <td class="table-primary">{{ format_cp_value((post_overhead_day + 4) * critical_success_earn_income_rate_cp_per_day) }}</td>
       <td class="table-primary">
         <span v-bind:class="{'font-weight-bold': crafting_discount_with_critical_success(post_overhead_day + 4) > 0}">
@@ -329,7 +336,7 @@ SOFTWARE.
 
       <td class="table-success">{{ format_cp_value(overhead_cost_cp) }}</td>
       <td class="table-success">{{ format_cp_value(value_cp_spent_crafting_with_success(post_overhead_day + 4)) }}</td>
-      <td class="table-success">{{ format_cp_value(item_value_cp - value_cp_spent_crafting_with_success(post_overhead_day + 4)) }}</td>
+      <td class="table-success">{{ format_cp_value(item_batch_value_cp - value_cp_spent_crafting_with_success(post_overhead_day + 4)) }}</td>
       <td class="table-success">{{ format_cp_value((post_overhead_day + 4) * success_earn_income_rate_cp_per_day) }}</td>
       <td class="table-success">
         <span v-bind:class="{'font-weight-bold': crafting_discount_with_success(post_overhead_day + 4) > 0}">
@@ -390,6 +397,7 @@ var app = new Vue({
     item_is_alchemical: false,
     item_is_snare: false,
     item_is_magical: false,
+    item_batch_size: 1,
     settlement_level: 1,
     format_values_in_gp_decimal: false,
 
@@ -547,16 +555,16 @@ var app = new Vue({
       if (day <= this.overhead_days) {
         return this.overhead_cost_cp;
       }
-      return Math.min(this.overhead_cost_cp + (day - this.overhead_days) * earn_rate, this.item_value_cp);
+      return Math.min(this.overhead_cost_cp + (day - this.overhead_days) * earn_rate, this.item_batch_value_cp);
     },
     value_cp_spent_crafting_with_critical_success: function(day) {
       return this.value_cp_spent_given_day(day, this.critical_success_craft_rate_cp_per_day);
     },
     total_crafting_cost_with_critical_success: function(day) {
-      return this.overhead_cost_cp + (this.item_value_cp - this.value_cp_spent_given_day(day, this.critical_success_craft_rate_cp_per_day));
+      return this.overhead_cost_cp + (this.item_batch_value_cp - this.value_cp_spent_given_day(day, this.critical_success_craft_rate_cp_per_day));
     },
     total_earn_income_cost_with_critical_success: function(day) {
-      return this.item_value_cp - day * this.critical_success_earn_income_rate_cp_per_day;
+      return this.item_batch_value_cp - day * this.critical_success_earn_income_rate_cp_per_day;
     },
     crafting_discount_with_critical_success: function(day) {
       return this.total_earn_income_cost_with_critical_success(day) - this.total_crafting_cost_with_critical_success(day);
@@ -565,10 +573,10 @@ var app = new Vue({
       return this.value_cp_spent_given_day(day, this.success_craft_rate_cp_per_day);
     },
     total_crafting_cost_with_success: function(day) {
-      return this.overhead_cost_cp + (this.item_value_cp - this.value_cp_spent_given_day(day, this.success_craft_rate_cp_per_day));
+      return this.overhead_cost_cp + (this.item_batch_value_cp - this.value_cp_spent_given_day(day, this.success_craft_rate_cp_per_day));
     },
     total_earn_income_cost_with_success: function(day) {
-      return this.item_value_cp - day * this.success_earn_income_rate_cp_per_day;
+      return this.item_batch_value_cp - day * this.success_earn_income_rate_cp_per_day;
     },
     crafting_discount_with_success: function(day) {
       return this.total_earn_income_cost_with_success(day) - this.total_crafting_cost_with_success(day);
@@ -579,6 +587,7 @@ var app = new Vue({
       this.item_is_alchemical = item.is_alchemical || false;
       this.item_is_snare = item.is_snare || false;
       this.item_is_magical = item.is_magical || false;
+      this.item_batch_size = item.batch_size;
       this.item_rarity = item.rarity;
     },
   },
@@ -632,6 +641,9 @@ var app = new Vue({
     item_rarity_name: function() {
       return this.get_rarity_name(this.item_rarity);
     },
+    item_batch_value_cp: function() {
+      return this.item_value_cp * this.item_batch_size;
+    },
     difficulty_class_item_level: function() {
       return this.dc_by_level[this.item_level];
     },
@@ -654,7 +666,7 @@ var app = new Vue({
       return this.calculate_crafting_result_chance(0);
     },
     overhead_cost_cp: function() {
-      return Math.floor(this.item_value_cp / 2);
+      return Math.floor(this.item_batch_value_cp / 2);
     },
     overhead_days: function() {
       return 4;
@@ -678,7 +690,7 @@ var app = new Vue({
       return this.earn_income_by_level[task_level][0];
     },
     max_post_overhead_days_to_craft: function() {
-      return Math.ceil((this.item_value_cp - this.overhead_cost_cp) / this.success_craft_rate_cp_per_day);
+      return Math.ceil((this.item_batch_value_cp - this.overhead_cost_cp) / this.success_craft_rate_cp_per_day);
     },
     max_days_to_craft: function() {
       return this.max_post_overhead_days_to_craft + this.overhead_days;
