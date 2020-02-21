@@ -314,7 +314,7 @@ SOFTWARE.
 
       <td class="table-secondary">{{ format_cp_value(Math.floor(overhead_cost_cp / 10)) }}</td>
     </tr>
-    <tr v-for="post_overhead_day in max_days_to_craft">
+    <tr v-for="post_overhead_day in Math.min(max_post_overhead_days_to_craft, 365 - overhead_days)">
       <th scope="row">{{ post_overhead_day + 4 }}</th>
 
       <td class="table-primary">{{ format_cp_value(overhead_cost_cp) }}</td>
@@ -342,6 +342,9 @@ SOFTWARE.
       <td class="table-danger">{{ format_cp_value(Math.floor(overhead_cost_cp / 10)) }}</td>
     </tr>
   </table>
+  <div v-if="max_days_to_craft > 365" class="alert alert-danger">
+    {{ max_days_to_craft }} days required to craft! Only showing 365 days.
+  </div>
 </div>
 
 <h2>Community Use Policy</h2>
@@ -674,8 +677,11 @@ var app = new Vue({
       let task_level = Math.min(this.settlement_level, this.character_level);
       return this.earn_income_by_level[task_level][0];
     },
-    max_days_to_craft: function() {
+    max_post_overhead_days_to_craft: function() {
       return Math.ceil((this.item_value_cp - this.overhead_cost_cp) / this.success_craft_rate_cp_per_day);
+    },
+    max_days_to_craft: function() {
+      return this.max_post_overhead_days_to_craft + this.overhead_days;
     },
     state_as_base64: function() {
       // Remember to version the URL hash object in case the format changes
