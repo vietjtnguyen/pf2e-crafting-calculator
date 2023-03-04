@@ -329,7 +329,6 @@ SOFTWARE.
       <li>Chance of <span class="badge badge-pill badge-danger">Critical Failure</span>: {{
         rush_finish_critical_failure_chance }}% - Your item is ruined or cursed</li>
       </ul>
-      </span>
 
       <h3>Natural Roll Results</h3>
       <p>
@@ -337,6 +336,7 @@ SOFTWARE.
           v-bind:class="{badge: true, 'badge-pill': true, 'badge-success': check_rush_finish_result(natural_roll) == 2 || check_rush_finish_result(natural_roll) == 3, 'badge-warning': check_rush_finish_result(natural_roll) == 1, 'badge-danger': check_rush_finish_result(natural_roll) == 0}">{{
           natural_roll }}</span>
       </p>
+      </span>
 
       <hr>
       <h3>Quick Adjustment</h3>
