@@ -223,6 +223,15 @@ SOFTWARE.
           </div>
         </div>
       </div>
+      <div class="form-group row">
+        <label class="col-sm-4 col-form-label" for="complex_crafting_quick_setup">Quick Setup:</label>
+        <div class="col-sm-8">
+          <div class="form-check single-checkbox-wrapper">
+            <input class="form-check-input" id="complex_crafting_quick_setup" type="checkbox"
+              v-model="complex_crafting_quick_setup">
+          </div>
+        </div>
+      </div>
 
 
       <hr>
@@ -252,6 +261,9 @@ SOFTWARE.
       </div>
       <div class="alert alert-warning" v-if="item_is_magical">
         Character has <a href="http://2e.aonprd.com/Feats.aspx?ID=812">magical crafting feat</a>
+      </div>
+      <div class="alert alert-warning" v-if="complex_crafting_quick_setup">
+        Character has <a href="https://2e.aonprd.com/Feats.aspx?ID=4085">quick setup skill feat</a>
       </div>
       <div class="alert alert-warning" v-if="item_rarity > 0">
         Character has access to formula (item is {{ item_rarity_name }}, up to GM discretion)
@@ -422,7 +434,7 @@ SOFTWARE.
         </tr>
 
         <tr v-if="overhead_days === 0">
-          <th scope="row">4 hours (req.)</th>
+          <th scope="row">{{ zero_day_crafting_duration }}</th>
 
           <td class="table-secondary">{{ format_cp_value(overhead_cost_cp) }}</td>
           <td class="table-secondary">{{ format_cp_value(overhead_cost_cp) }}</td>
@@ -597,6 +609,7 @@ SOFTWARE.
         format_values_in_gp_decimal: false,
         complex_crafting_enabled: false,
         complex_crafting_rush_level: 0,
+        complex_crafting_quick_setup: false,
 
         item_search_text: '',
         item_list: items,
@@ -607,8 +620,8 @@ SOFTWARE.
         minimum_crafting_proficiency_by_rush_level: [0, 2, 3, 4],
         dc_by_level: [14, 15, 16, 18, 19, 20, 22, 23, 24, 26, 27, 28, 30, 31, 32, 34, 35, 36, 38, 39, 40, 42, 44, 46, 48, 50],
         complex_crafting_days_by_level: [
-          [6, 5, 5, 4],
-          [4, 3, 3, 2]
+          [6, 5, 5, 4, 4, 4, 3],
+          [4, 3, 3, 2, 2, 2, 1]
         ],
         dc_adjustment_by_rarity: [0, 2, 5, 10],
         earn_income_by_level: [
@@ -751,7 +764,7 @@ SOFTWARE.
         get_rush_level_name: function (result) {
           if (result == 0) return "None";
           if (result == 1) return "1 day";
-          if (result == 2) return "2 day";
+          if (result == 2) return "2 days";
           if (result == 3) return "3 days";
           return "Unknown";
         },
@@ -891,6 +904,9 @@ SOFTWARE.
         },
         complex_crafting_level_difference: function () {
           const level_difference = this.character_level - this.item_level;
+          if (level_difference >= 6 && this.complex_crafting_quick_setup) {
+            return 6;
+          }
           if (level_difference > 3) {
             return 3;
           }
@@ -905,11 +921,16 @@ SOFTWARE.
         },
         overhead_days: function () {
           if (this.complex_crafting_enabled) {
-            return this.complex_overhead_days - this.complex_crafting_rush_level;
+            return Math.max(this.complex_overhead_days - this.complex_crafting_rush_level, 0);
           }
 
           return 4;
-
+        },
+        zero_day_crafting_duration: function () {
+          if (this.complex_crafting_level_difference === 6 && this.item_consumable) {
+            return '2 hours (req.)';
+          }
+          return '4 hours (req.)';
         },
         critical_success_craft_rate_cp_per_day: function () {
           return this.earn_income_by_level[this.character_level + 1][this.crafting_proficiency_level];
@@ -992,6 +1013,7 @@ SOFTWARE.
                 this.item_consumable,
                 this.complex_crafting_enabled,
                 this.complex_crafting_rush_level,
+                this.complex_crafting_quick_setup,
               ];
           }
           return btoa(JSON.stringify(state_json_obj));
@@ -1072,6 +1094,7 @@ SOFTWARE.
             app.item_consumable = Boolean(state_json_obj[14]);
             app.complex_crafting_enabled = Boolean(state_json_obj[15]);
             app.complex_crafting_rush_level = Number(state_json_obj[16]);
+            app.complex_crafting_quick_setup = Boolean(state_json_obj[17]);
             break;
           default:
             app.error_message = 'ERROR: Application state object from URL has unknown version';
