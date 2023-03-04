@@ -217,9 +217,18 @@ SOFTWARE.
         <div class="col-sm-8">
           <div v-for="rush_level in [0, 1, 2, 3]" class="form-check">
             <input class="form-check-input" v-bind:id="'rush_level'+rush_level" type="radio" v-bind:value="rush_level"
-              v-model.number="complex_crafting_rush_level">
+              v-model.number="complex_crafting_rush_setup_level">
             <label class="form-check-label" v-bind:for="'rush_level'+rush_level">{{ get_rush_level_name(rush_level)
               }}</label>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-4 col-form-label" for="complex_crafting_rush_finish">Rush Finish:</label>
+        <div class="col-sm-8">
+          <div class="form-check single-checkbox-wrapper">
+            <input class="form-check-input" id="complex_crafting_rush_finish" type="checkbox"
+              v-model="complex_crafting_rush_finish">
           </div>
         </div>
       </div>
@@ -247,11 +256,15 @@ SOFTWARE.
         Item level {{ item_level }} requires minimum {{ get_proficiency_name(minimum_crafting_proficiency) }}
         proficiency
       </div>
-      <div v-if="complex_crafting_enabled && complex_crafting_rush_level > 0"
+      <div v-if="complex_crafting_enabled && complex_crafting_rush_setup_level > 0"
         v-bind:class="{alert: true, 'alert-success': sufficient_rush_proficiency_level, 'alert-danger': !sufficient_rush_proficiency_level}">
-        Rushing by {{ get_rush_level_name(complex_crafting_rush_level) }} requires minimum {{
-        get_proficiency_name(complex_crafting_rush_level + 1) }}
+        Rushing setup by {{ get_rush_level_name(complex_crafting_rush_setup_level) }} requires minimum {{
+        get_proficiency_name(complex_crafting_rush_setup_level + 1) }}
         proficiency
+      </div>
+      <div v-if="complex_crafting_enabled && complex_crafting_rush_finish"
+        v-bind:class="{alert: true, 'alert-success': sufficient_rush_finish_proficiency_level, 'alert-danger': !sufficient_rush_finish_proficiency_level}">
+        Rushing the finish process requires minimum Expert proficiency
       </div>
       <div class="alert alert-warning" v-if="item_is_alchemical">
         Character has <a href="http://2e.aonprd.com/Feats.aspx?ID=752">alchemical crafting feat</a>
@@ -302,6 +315,30 @@ SOFTWARE.
           natural_roll }}</span>
       </p>
 
+      <span v-if="complex_crafting_enabled && complex_crafting_rush_finish">
+        <hr>
+        <h2>Rush Finish Check</h2>
+        <ul>
+          <li>Expected difficulty class: DC {{rush_finish_flat_check_difficulty}} = DC 10 + item level (+{{item_level}})
+            - proficiency adjustment (-{{crafting_proficiency_bonus}})
+      </span></li>
+      <li>Chance of <span class="badge badge-pill badge-success">Success</span>: {{ rush_finish_success_chance }}% - You
+        complete the item perfectly</li>
+      <li>Chance of <span class="badge badge-pill badge-warning">Failure</span>: {{ rush_finish_failure_chance }}% - You
+        complete the item, but it gains a <a href="https://2e.aonprd.com/Rules.aspx?ID=1083">quirk</a></li>
+      <li>Chance of <span class="badge badge-pill badge-danger">Critical Failure</span>: {{
+        rush_finish_critical_failure_chance }}% - Your item is ruined or cursed</li>
+      </ul>
+      </span>
+
+      <h3>Natural Roll Results</h3>
+      <p>
+        <span v-for="natural_roll in 20"
+          v-bind:class="{badge: true, 'badge-pill': true, 'badge-success': check_rush_finish_result(natural_roll) == 2 || check_rush_finish_result(natural_roll) == 3, 'badge-warning': check_rush_finish_result(natural_roll) == 1, 'badge-danger': check_rush_finish_result(natural_roll) == 0}">{{
+          natural_roll }}</span>
+      </p>
+
+      <hr>
       <h3>Quick Adjustment</h3>
 
       <div class="form-group row">
@@ -608,8 +645,9 @@ SOFTWARE.
         settlement_level: 1,
         format_values_in_gp_decimal: false,
         complex_crafting_enabled: false,
-        complex_crafting_rush_level: 0,
+        complex_crafting_rush_setup_level: 0,
         complex_crafting_quick_setup: false,
+        complex_crafting_rush_finish: false,
 
         item_search_text: '',
         item_list: items,
@@ -617,7 +655,8 @@ SOFTWARE.
         error_message: '',
 
         minimum_crafting_proficiency_by_level: [1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
-        minimum_crafting_proficiency_by_rush_level: [0, 2, 3, 4],
+        minimum_crafting_proficiency_by_rush_setup_level: [0, 2, 3, 4],
+        minimum_crafting_proficiency_for_rush_finish: 2,
         dc_by_level: [14, 15, 16, 18, 19, 20, 22, 23, 24, 26, 27, 28, 30, 31, 32, 34, 35, 36, 38, 39, 40, 42, 44, 46, 48, 50],
         complex_crafting_days_by_level: [
           [6, 5, 5, 4, 4, 4, 3],
@@ -746,6 +785,18 @@ SOFTWARE.
           }
           return chance * 5;
         },
+        check_rush_finish_result: function (natural_roll) {
+          return this.check_result(natural_roll, 0, this.rush_finish_flat_check_difficulty);
+        },
+        calculate_rush_finish_result_chance: function (result) {
+          let chance = 0;
+          for (let natural_roll = 1; natural_roll <= 20; natural_roll += 1) {
+            if (this.check_rush_finish_result(natural_roll) == result) {
+              chance += 1;
+            }
+          }
+          return chance * 5;
+        },
         get_result_name: function (result) {
           if (result == 0) return "Critical Failure";
           if (result == 1) return "Failure";
@@ -823,14 +874,17 @@ SOFTWARE.
         minimum_crafting_proficiency: function () {
           return this.minimum_crafting_proficiency_by_level[this.item_level];
         },
-        minimum_rush_level_proficiency: function () {
-          return this.minimum_crafting_proficiency_by_rush_level[this.complex_crafting_rush_level];
+        minimum_rush_setup_level_proficiency: function () {
+          return this.minimum_crafting_proficiency_by_rush_setup_level[this.complex_crafting_rush_setup_level];
         },
         sufficient_proficiency_level: function () {
           return this.crafting_proficiency_level >= this.minimum_crafting_proficiency;
         },
         sufficient_rush_proficiency_level: function () {
-          return this.crafting_proficiency_level >= this.minimum_rush_level_proficiency;
+          return this.crafting_proficiency_level >= this.minimum_rush_setup_level_proficiency;
+        },
+        sufficient_rush_finish_proficiency_level: function () {
+          return this.crafting_proficiency_level >= this.minimum_crafting_proficiency_for_rush_finish;
         },
         crafting_proficiency_bonus: function () {
           if (this.crafting_proficiency_level == 0) {
@@ -885,7 +939,7 @@ SOFTWARE.
           return this.difficulty_class_item_level + this.difficulty_class_rarity_adjustment + this.difficulty_class_rush_modifier;
         },
         difficulty_class_rush_modifier: function () {
-          return this.complex_crafting_enabled ? this.complex_crafting_rush_level * 5 : 0;
+          return this.complex_crafting_enabled ? this.complex_crafting_rush_setup_level * 5 : 0;
         },
         critical_success_chance: function () {
           return this.calculate_crafting_result_chance(3);
@@ -898,6 +952,15 @@ SOFTWARE.
         },
         critical_failure_chance: function () {
           return this.calculate_crafting_result_chance(0);
+        },
+        rush_finish_success_chance: function () {
+          return this.calculate_rush_finish_result_chance(2) + this.calculate_rush_finish_result_chance(3);
+        },
+        rush_finish_failure_chance: function () {
+          return this.calculate_rush_finish_result_chance(1);
+        },
+        rush_finish_critical_failure_chance: function () {
+          return this.calculate_rush_finish_result_chance(0);
         },
         overhead_cost_cp: function () {
           return Math.floor(this.item_batch_value_cp / 2);
@@ -921,7 +984,7 @@ SOFTWARE.
         },
         overhead_days: function () {
           if (this.complex_crafting_enabled) {
-            return Math.max(this.complex_overhead_days - this.complex_crafting_rush_level, 0);
+            return Math.max(this.complex_overhead_days - this.complex_crafting_rush_setup_level, 0);
           }
 
           return 4;
@@ -932,11 +995,17 @@ SOFTWARE.
           }
           return '4 hours (req.)';
         },
+        rush_finish_flat_check_difficulty: function () {
+          return 10 + this.item_level - (this.crafting_proficiency_bonus);
+        },
+        complex_crafting_rush_finish_multiplier: function () {
+          return this.complex_crafting_enabled && this.complex_crafting_rush_finish ? 2 : 1;
+        },
         critical_success_craft_rate_cp_per_day: function () {
-          return this.earn_income_by_level[this.character_level + 1][this.crafting_proficiency_level];
+          return this.earn_income_by_level[this.character_level + 1][this.crafting_proficiency_level] * this.complex_crafting_rush_finish_multiplier;
         },
         success_craft_rate_cp_per_day: function () {
-          return this.earn_income_by_level[this.character_level][this.crafting_proficiency_level];
+          return this.earn_income_by_level[this.character_level][this.crafting_proficiency_level] * this.complex_crafting_rush_finish_multiplier;
         },
         critical_success_earn_income_rate_cp_per_day: function () {
           let task_level = Math.min(this.settlement_level, this.character_level);
@@ -1012,8 +1081,9 @@ SOFTWARE.
                 this.item_search_text,
                 this.item_consumable,
                 this.complex_crafting_enabled,
-                this.complex_crafting_rush_level,
+                this.complex_crafting_rush_setup_level,
                 this.complex_crafting_quick_setup,
+                this.complex_crafting_rush_finish,
               ];
           }
           return btoa(JSON.stringify(state_json_obj));
@@ -1093,8 +1163,9 @@ SOFTWARE.
             app.item_search_text = String(state_json_obj[13]);
             app.item_consumable = Boolean(state_json_obj[14]);
             app.complex_crafting_enabled = Boolean(state_json_obj[15]);
-            app.complex_crafting_rush_level = Number(state_json_obj[16]);
+            app.complex_crafting_rush_setup_level = Number(state_json_obj[16]);
             app.complex_crafting_quick_setup = Boolean(state_json_obj[17]);
+            app.complex_crafting_rush_finish = Boolean(state_json_obj[18]);
             break;
           default:
             app.error_message = 'ERROR: Application state object from URL has unknown version';
